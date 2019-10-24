@@ -50,16 +50,11 @@ def array120_to_array64(board_10x12):
 
 
 class Pawn(Board):
-
-    def __init__(self,boardState,WP,BP,W_ALL,B_ALL):
-        self.WP = WP
-        self.BP = BP
-        self.W_ALL = W_ALL
-        self.B_ALL = B_ALL
-        self.boardState = boardState
+    def __init__(self,object):
+        self.object = object
 
     def whitePawnAttMap(self):
-        board120 = array64_to_array120(self.WP)
+        board120 = array64_to_array120(self.object.WP)
         att120 = np.array([0 for i in range(120)])
         for i in range(120):
             if board120[i] == 1:
@@ -91,7 +86,7 @@ class Pawn(Board):
                     move_list.append((i,i-9))
                 if (blackPieces120 | whitePieces120)[i-10]== 0 and i-10 in in_index:
                     move_list.append((i,i-10))
-                if i in FILE_2 and (blackPieces120 | whitePieces120)[i-10]==0 and (blackPieces120 | whitePieces120)[i-20]==0and  i-20 in in_index:
+                if i in FILE_2 and (blackPieces120 | whitePieces120)[i-10]==0 and (blackPieces120 | whitePieces120)[i-20]==0 and  i-20 in in_index:
                     move_list.append((i,i-20))
         return move_list
 
@@ -113,6 +108,8 @@ class Pawn(Board):
         return move_list
 
 class Night(Board):
+
+
     def __init__(self,boardState,WN,BN,W_ALL,B_ALL):
         self.WN = WN
         self.BN = BN
@@ -965,14 +962,14 @@ class King(Board):
 
 
 
-
-p = Pawn(b.get_board_state(),b.WP,b.BP,b.W_ALL,b.B_ALL)
-n = Night(b.get_board_state(),b.WN,b.BN,b.W_ALL,b.B_ALL)
-B = Bishop(b.get_board_state(),b.WB,b.BB,b.W_ALL,b.B_ALL)
-r = Rook(b.get_board_state(),b.WR,b.BR,b.W_ALL,b.B_ALL)
-q = Queen(b.get_board_state(),b.WQ,b.BQ,b.W_ALL,b.B_ALL)
-k = King(b.get_board_state(),b.WK,b.BK,b.W_ALL,b.B_ALL)
-print(k.PLmoves_blackKing())
+p = Pawn(b)
+print(p.whitePawnAttMap())
+# n = Night(b.get_board_state(),b.WN,b.BN,b.W_ALL,b.B_ALL)
+# B = Bishop(b.get_board_state(),b.WB,b.BB,b.W_ALL,b.B_ALL)
+# r = Rook(b.get_board_state(),b.WR,b.BR,b.W_ALL,b.B_ALL)
+# q = Queen(b.get_board_state(),b.WQ,b.BQ,b.W_ALL,b.B_ALL)
+# k = King(b.get_board_state(),b.WK,b.BK,b.W_ALL,b.B_ALL)
+# print(k.PLmoves_blackKing())
 # n = Night(b.get_board_state(),b.WN,b.BN)
 # # b = Bishop(b.get_board_state(),b.WB,b.BB)
 # r = Rook(b.get_board_state(),b.WR,b.BR)
