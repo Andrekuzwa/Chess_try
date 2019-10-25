@@ -55,14 +55,30 @@ class Board:
                             [' ',' ',' ',' ',' ',' ',' ','k'],
                             [' ',' ',' ',' ',' ',' ',' ',' '],
                             ['P','P','P','P','P','P','P','P'],
-                            ['R',' ',' ',' ',' ',' ','K',' ']])
+                            ['R','N',' ',' ',' ',' ','K',' ']])
 
-    def __init__(self,board=start_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[]):
+    def __init__(self,board=start_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,BSR_moved = False,BLR_moved = False,WK_checked = False,BK_checked = False,W_Pmoves = [],B_Pmoves = []):
         self.board = board
         self.WP,self.WN, self.WB, self.WR, self.WQ, self.WK, self.BP, self.BN, self.BB, self.BR, self.BQ, self.BK = WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK
         self.ALL = ALL
         self.W_ALL = W_ALL
         self.B_ALL = B_ALL
+        self.WSC = WSC
+        self.WLC = WLC
+        self.BSC = BSC
+        self.BLC = BLC
+        self.WK_moved = WK_moved
+        self.BK_moved = BK_moved
+        self.WSR_moved = WSR_moved
+        self.WLR_moved = WLR_moved
+        self.BSR_moved = BSR_moved
+        self.BLR_moved = BLR_moved
+        self.WK_checked = WK_checked
+        self.BK_checked = BK_checked
+        self.W_Pmoves = W_Pmoves
+        self.B_Pmoves = B_Pmoves
+
+
 
     def arrayToBitBoards(self):
         bitBoardList = [[],[],[],[],[],[],[],[],[],[],[],[]]
