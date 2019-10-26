@@ -48,16 +48,18 @@ FILE_2 = [81,82,83,84,85,86,87,88]
 FILE_1 = [91,92,93,94,95,96,97,98]
 
 class Board:
-    start_board = np.array([[' ','n',' ','q',' ',' ','r','r'],
+    start_board = np.array([[' ','n','b','q',' ',' ','r','r'],
                             ['p','p',' ',' ','n','p','p','p'],
                             [' ',' ',' ','p',' ',' ',' ',' '],
                             [' ',' ',' ','B','p',' ',' ',' '],
                             [' ',' ',' ',' ',' ',' ',' ','k'],
-                            [' ',' ',' ',' ',' ',' ',' ',' '],
+                            ['R',' ',' ',' ',' ',' ',' ',' '],
                             ['P','P','P','P','P','P','P','P'],
                             ['R','N',' ',' ',' ',' ','K',' ']])
 
-    def __init__(self,board=start_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,BSR_moved = False,BLR_moved = False,WK_checked = False,BK_checked = False,W_Pmoves = [],B_Pmoves = []):
+    def __init__(self,board=start_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],
+                 WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,
+                 BSR_moved = False,BLR_moved = False,WK_checked = False,BK_checked = False,W_PLmoves = [],B_PLmoves = [],W_Pmoves = [],B_Pmoves = []):
         self.board = board
         self.WP,self.WN, self.WB, self.WR, self.WQ, self.WK, self.BP, self.BN, self.BB, self.BR, self.BQ, self.BK = WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK
         self.ALL = ALL
@@ -75,6 +77,8 @@ class Board:
         self.BLR_moved = BLR_moved
         self.WK_checked = WK_checked
         self.BK_checked = BK_checked
+        self.W_PLmoves = W_PLmoves
+        self.B_PLmoves = B_PLmoves
         self.W_Pmoves = W_Pmoves
         self.B_Pmoves = B_Pmoves
 

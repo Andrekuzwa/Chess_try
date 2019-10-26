@@ -53,8 +53,8 @@ class Pawn(Board):
         self.OB = OB
         self.whitePawnAttMap = self.whitePawnAttMapDef()
         self.blackPawnAttMap = self.blackPawnAttMapDef()
-        self.PLmoves_whitePawn = self.blackPawnAttMapDef()
-        self.PLmoves_blackPawn = self.blackPawnAttMapDef()
+        self.PLmoves_whitePawn = self.PLmoves_whitePawnDef()
+        self.PLmoves_blackPawn = self.PLmoves_blackPawnDef()
 
     def whitePawnAttMapDef(self):
         board120 = array64_to_array120(self.OB.WP)
@@ -67,7 +67,7 @@ class Pawn(Board):
         return att120
 
     def blackPawnAttMapDef(self):
-        board120 = array64_to_array120(self.BP)
+        board120 = array64_to_array120(self.OB.BP)
         att120 = np.array([0 for i in range(120)])
         for i in range(120):
             if board120[i] == 1:
@@ -79,7 +79,7 @@ class Pawn(Board):
     def PLmoves_whitePawnDef(self):
         board120 = array64_to_array120(self.OB.WP)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
-        whitePieces120 = array64_to_array120(self.W_ALL)
+        whitePieces120 = array64_to_array120(self.OB.W_ALL)
         move_list = []
         for i in range(120):
             if board120[i] == 1:
@@ -94,7 +94,7 @@ class Pawn(Board):
         return move_list
 
     def PLmoves_blackPawnDef(self):
-        board120 = array64_to_array120(self.OB.OB.BP)
+        board120 = array64_to_array120(self.OB.BP)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
         move_list = []
@@ -112,10 +112,14 @@ class Pawn(Board):
 
 class Night(Board):
 
-    def __init__(self, OB):
+    def __init__(self, OB,whiteNightAttMap = [],blackNightAttMap = [],PLmoves_whiteNight = [],PLmoves_blackNight = []):
         self.OB = OB
+        self.whiteNightAttMap = self.whiteNightAttMapDef()
+        self.blackNightAttMap = self.blackNightAttMapDef()
+        self.PLmoves_whiteNight = self.PLmoves_whiteNightDef()
+        self.PLmoves_blackNight = self.PLmoves_blackNightDef()
 
-    def whiteNightAttMap(self):
+    def whiteNightAttMapDef(self):
         board120 = array64_to_array120(self.OB.WN)
         att120 = np.array([0 for i in range(120)])
         for i in range(120):
@@ -131,7 +135,7 @@ class Night(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def blackNightAttMap(self):
+    def blackNightAttMapDef(self):
         board120 = array64_to_array120(self.OB.BN)
         att120 = np.array([0 for i in range(120)])
         for i in range(120):
@@ -147,7 +151,7 @@ class Night(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def PLmoves_whiteNight(self):
+    def PLmoves_whiteNightDef(self):
         board120 = array64_to_array120(self.OB.WN)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -172,7 +176,7 @@ class Night(Board):
                     move_list.append((i, i + 21))
         return move_list
 
-    def PLmoves_blackNight(self):
+    def PLmoves_blackNightDef(self):
         board120 = array64_to_array120(self.OB.BN)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -198,10 +202,14 @@ class Night(Board):
         return move_list
 
 class Bishop(Board):
-    def __init__(self, OB):
+    def __init__(self, OB, whiteBishopAttMap = [],blackBishopAttMap = [],PLmoves_whiteBishop = [],PLmoves_blackBishop = []):
         self.OB = OB
+        self.whiteBishopAttMap = self.whiteBishopAttMapDef()
+        self.blackBishopAttMap = self.blackBishopAttMapDef()
+        self.PLmoves_whiteBishop = self.PLmoves_whiteBishopDef()
+        self.PLmoves_blackBishop = self.PLmoves_blackBishopDef()
 
-    def whiteBishopAttMap(self):
+    def whiteBishopAttMapDef(self):
         board120 = array64_to_array120(self.OB.WB)
         att120 = np.array([0 for i in range(120)])
         att_index = []
@@ -232,7 +240,7 @@ class Bishop(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def blackBishopAttMap(self):
+    def blackBishopAttMapDef(self):
         board120 = array64_to_array120(self.OB.BB)
         att120 = np.array([0 for i in range(120)])
         att_index = []
@@ -263,7 +271,7 @@ class Bishop(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def PLmoves_whiteBishop(self):
+    def PLmoves_whiteBishopDef(self):
         board120 = array64_to_array120(self.OB.WB)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -316,7 +324,7 @@ class Bishop(Board):
                         break
         return move_list
 
-    def PLmoves_blackBishop(self):
+    def PLmoves_blackBishopDef(self):
         board120 = array64_to_array120(self.OB.BB)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -370,10 +378,14 @@ class Bishop(Board):
         return move_list
 
 class Rook(Board):
-    def __init__(self, OB):
+    def __init__(self, OB,whiteRookAttMap = [],blackRookAttMap = [],PLmoves_whiteRook = [],PLmoves_blackRook = []):
         self.OB = OB
+        self.whiteRookAttMap = self.whiteRookAttMapDef()
+        self.blackRookAttMap = self.blackRookAttMapDef()
+        self.PLmoves_whiteRook = self.PLmoves_whiteRookDef()
+        self.PLmoves_blackRook = self.PLmoves_blackRookDef()
 
-    def whiteRookAttMap(self):
+    def whiteRookAttMapDef(self):
         board120 = array64_to_array120(self.OB.WR)
         att120 = np.array([0 for i in range(120)])
         att_index = []
@@ -405,7 +417,7 @@ class Rook(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def blackRookAttMap(self):
+    def blackRookAttMapDef(self):
         board120 = array64_to_array120(self.OB.BR)
         att120 = np.array([0 for i in range(120)])
         att_index = []
@@ -437,7 +449,7 @@ class Rook(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def PLmoves_whiteRook(self):
+    def PLmoves_whiteRookDef(self):
         board120 = array64_to_array120(self.OB.WR)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -490,7 +502,7 @@ class Rook(Board):
                         break
         return move_list
 
-    def PLmoves_blackRook(self):
+    def PLmoves_blackRookDef(self):
         board120 = array64_to_array120(self.OB.BR)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -544,10 +556,14 @@ class Rook(Board):
         return move_list
 
 class Queen(Board):
-    def __init__(self, OB):
+    def __init__(self, OB,whiteQueenAttMap = [],blackQueenAttMap = [],PLmoves_whiteQueen = [],PLmoves_blackQueen = []):
         self.OB = OB
+        self.whiteQueenAttMap = self.whiteQueenAttMapDef()
+        self.blackQueenAttMap = self.blackQueenAttMapDef()
+        self.PLmoves_whiteQueen = self.PLmoves_whiteQueenDef()
+        self.PLmoves_blackQueen = self.PLmoves_blackQueenDef()
 
-    def whiteQueenAttMap(self):
+    def whiteQueenAttMapDef(self):
         board120 = array64_to_array120(self.OB.WQ)
         att120 = np.array([0 for i in range(120)])
         att_index = []
@@ -599,7 +615,7 @@ class Queen(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def blackQueenAttMap(self):
+    def blackQueenAttMapDef(self):
         board120 = array64_to_array120(self.OB.BQ)
         att120 = np.array([0 for i in range(120)])
         att_index = []
@@ -651,7 +667,7 @@ class Queen(Board):
         att120 = array120_to_array64(att120)
         return att120
 
-    def PLmoves_whiteQueen(self):
+    def PLmoves_whiteQueenDef(self):
         board120 = array64_to_array120(self.OB.WQ)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -748,7 +764,7 @@ class Queen(Board):
                         break
         return move_list
 
-    def PLmoves_blackQueen(self):
+    def PLmoves_blackQueenDef(self):
         board120 = array64_to_array120(self.OB.BQ)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -845,11 +861,16 @@ class Queen(Board):
                         break
         return move_list
 
-class King(Board,Pawn):
-    def __init__(self, OB):
+class King(Board):
+    def __init__(self, OB,pawn_object,whiteKingAttMap = [],blackKingAttMap = [],PLmoves_whiteKing = [],PLmoves_blackKing = []):
         self.OB = OB
+        self.pawn_object = pawn_object
+        self.whiteKingAttMap = self.whiteKingAttMaDef()
+        self.blackKingAttMap = self.blackKingAttMapDef()
+        self.PLmoves_whiteKing = self.PLmoves_whiteKingDef()
+        self.PLmoves_blackKing = self.PLmoves_blackKingDef()
 
-    def whiteKingAttMap(self):
+    def whiteKingAttMaDef(self):
         board120 = array64_to_array120(self.OB.WK)
         att120 = np.array([0 for i in range(120)])
         for i in range(len(board120)):
@@ -865,7 +886,7 @@ class King(Board,Pawn):
         att120 = array120_to_array64(att120)
         return att120
 
-    def blackKingAttMap(self):
+    def blackKingAttMapDef(self):
         board120 = array64_to_array120(self.OB.BK)
         att120 = np.array([0 for i in range(120)])
         for i in range(len(board120)):
@@ -881,7 +902,7 @@ class King(Board,Pawn):
         att120 = array120_to_array64(att120)
         return att120
 
-    def PLmoves_whiteKing(self):
+    def PLmoves_whiteKingDef(self):
         board120 = array64_to_array120(self.OB.WK)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -906,7 +927,7 @@ class King(Board,Pawn):
                     move_list.append((i, i + 11))
         return move_list
 
-    def PLmoves_blackKing(self):
+    def PLmoves_blackKingDef(self):
         board120 = array64_to_array120(self.OB.BK)
         blackPieces120 = array64_to_array120(self.OB.B_ALL)
         whitePieces120 = array64_to_array120(self.OB.W_ALL)
@@ -932,6 +953,7 @@ class King(Board,Pawn):
         return move_list
 
     def whiteCastleCheck(self):
+        moves = []
         if self.OB.WK_moved == True:
             self.OB.WSC = False
             self.OB.WLC = False
@@ -939,23 +961,71 @@ class King(Board,Pawn):
             self.OB.WSC = False
         if self.OB.WLR_moved == True:
             self.OB.WLC = False
-        if self.OB.ALL[61] == 1 or self.OB.ALL[62] == 1:
-            self.OB.WSC = False
-        if self.OB.ALL[57] == 1 or self.OB.ALL[58] == 1 or self.OB.ALL[59] == 1:
-            self.OB.WLC = False
-        if (96 in [item[1] for item in self.OB.B_Pmoves]) or (97 in [item[1] for item in self.OB.B_Pmoves]) or self.OB.blackPawnAttMap()[61] == 1 or self.OB.blackPawnAttMap()[62] == 1:
+        if self.OB.ALL[61] == 0 and self.OB.ALL[62] == 0 and\
+                (96 not in [item[1] for item in self.OB.B_PLmoves]) and\
+                (97 not in [item[1] for item in self.OB.B_PLmoves]) and\
+                self.pawn_object.blackPawnAttMap[61] == 0 and\
+                self.pawn_object.blackPawnAttMap[62] == 0 and\
+                self.OB.WK_checked == False:
+            moves.append((95,97))
+        if self.OB.ALL[57] == 0 and self.OB.ALL[58] == 0 and self.OB.ALL[59] == 0 and\
+                (92 not in [item[1] for item in self.OB.B_PLmoves]) and\
+                (93 not in [item[1] for item in self.OB.B_PLmoves]) and\
+                (94 not in [item[1] for item in self.OB.B_PLmoves]) and\
+                self.pawn_object.blackPawnAttMap[57] == 0 and\
+                self.pawn_object.blackPawnAttMap[58] == 0 and\
+                self.pawn_object.blackPawnAttMap[59] == 0 and\
+                self.OB.WK_checked == False:
+            moves.append((95,93))
+        return moves
+
+    def blackCastleCheck(self):
+        moves = []
+        if self.OB.BK_moved == True:
+            self.OB.BSC = False
+            self.OB.BLC = False
+        if self.OB.BSR_moved == True:
+            self.OB.BSC = False
+        if self.OB.BLR_moved == True:
+            self.OB.BLC = False
+        if self.OB.ALL[5] == 0 and self.OB.ALL[6] == 0 and\
+                (26 not in [item[1] for item in self.OB.W_PLmoves]) and\
+                (27 not in [item[1] for item in self.OB.W_PLmoves]) and\
+                self.pawn_object.whitePawnAttMap[5] == 0 and\
+                self.pawn_object.whitePawnAttMap[6] == 0 and\
+                self.OB.BK_checked == False:
+            moves.append((25,27))
+        if self.OB.ALL[1] == 0 and self.OB.ALL[2] == 0 and self.OB.ALL[3] == 0 and\
+                (22 not in [item[1] for item in self.OB.W_PLmoves]) and\
+                (23 not in [item[1] for item in self.OB.W_PLmoves]) and\
+                (24 not in [item[1] for item in self.OB.W_PLmoves]) and\
+                self.pawn_object.whitePawnAttMap[1] == 0 and\
+                self.pawn_object.whitePawnAttMap[2] == 0 and\
+                self.pawn_object.whitePawnAttMap[3] == 0 and\
+                self.OB.BK_checked == False:
+            moves.append((25,23))
+        return moves
 
 
 
 
-        
 
 
 
 
 
 
-k = King(b)
+p = Pawn(b)
+k = King(b,p)
+n = Night(b)
+B = Bishop(b)
+r = Rook(b)
+q  = Queen(b)
+
+print(k.whiteKingAttMap)
+print(k.blackKingAttMap)
+print(k.PLmoves_blackKing)
+print(k.PLmoves_whiteKing)
 
 
 
