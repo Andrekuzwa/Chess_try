@@ -31,23 +31,16 @@ import numpy as np
 in_index = [21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,56,57,58,61,62,63,64,65,66,67,68,71,72,73,74,75,76,77,78,81,82,83,84,85,86,87,88,91,92,93,94,95,96,97,98]
 
 
-# h1,h2,h3,h4,h5,h6,h7,h8 = 21,22,23,24,25,26,27,28
-# g1,g2,g3,g4,g5,g6,g7,g8 = 31,32,33,34,35,36,37,38
-# f1,f2,f3,f4,f5,f6,f7,f8 = 41,42,43,44,45,46,47,48
-# e1,e2,e3,e4,e5,e6,e7,e8 = 51,52,53,54,55,56,57,58
-# d1,d2,d3,d4,d5,d6,d7,d8 = 61,62,63,64,65,66,67,68
-# c1,c2,c3,c4,c5,c6,c7,c8 = 71,72,73,74,75,76,77,78
-# b1,b2,b3,b4,b5,b6,b7,b8 = 81,82,83,84,85,86,87,88
-# a1,a2,a3,a4,a5,a6,a7,a8 = 91,92,93,94,95,96,97,98
 
-FILE_8 = [21,22,23,24,25,26,27,28]
-FILE_7 = [31,32,33,34,35,36,37,38]
-FILE_6 = [41,42,43,44,45,46,47,48]
-FILE_5 = [51,52,53,54,55,56,57,58]
-FILE_4 = [61,62,63,64,65,66,67,68]
-FILE_3 = [71,72,73,74,75,76,77,78]
-FILE_2 = [81,82,83,84,85,86,87,88]
-FILE_1 = [91,92,93,94,95,96,97,98]
+
+RANK_8 = [21,22,23,24,25,26,27,28]
+RANK_7 = [31,32,33,34,35,36,37,38]
+RANK_6 = [41,42,43,44,45,46,47,48]
+RANK_5 = [51,52,53,54,55,56,57,58]
+RANK_4 = [61,62,63,64,65,66,67,68]
+RANK_3 = [71,72,73,74,75,76,77,78]
+RANK_2 = [81,82,83,84,85,86,87,88]
+RANK_1 = [91,92,93,94,95,96,97,98]
 
 
 def array64_to_array120(board64):
@@ -95,14 +88,14 @@ def array120_to_array64(board_10x12):
 
 
 class Board:
-    state_board = np.array(['k','p',' ',' ',' ',' ',' ',' ',
-                            'p','p',' ',' ',' ',' ',' ',' ',
+    state_board = np.array(['r','n','b','q','k','b','n','r',
+                            'p','p','p','p','p','p','p','p',
+                            ' ',' ',' ',' ','P',' ',' ','n',
                             ' ',' ',' ',' ',' ',' ',' ',' ',
                             ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            'R',' ',' ',' ','K',' ',' ','R'])
+                            ' ',' ',' ',' ',' ','Q',' ',' ',
+                            'P','P','P','P','P','P','P','P',
+                            'R','N','B','Q','K','B','N','R'])
 
     def __init__(self,board=state_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],
                  WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,
@@ -112,7 +105,8 @@ class Board:
                  whiteBishopAttMap = [],blackBishopAttMap = [],PLmoves_whiteBishop = [],PLmoves_blackBishop = [],
                  whiteRookAttMap = [],blackRookAttMap = [],PLmoves_whiteRook = [],PLmoves_blackRook = [],
                  whiteQueenAttMap = [],blackQueenAttMap = [],PLmoves_whiteQueen = [],PLmoves_blackQueen = [],
-                 whiteKingAttMap = [],blackKingAttMap = [],PLmoves_whiteKing = [],PLmoves_blackKing = []):
+                 whiteKingAttMap = [],blackKingAttMap = [],PLmoves_whiteKing = [],PLmoves_blackKing = [],
+                 matedWhite = False,matedBlack = False,staleWhite = False,staleBlack = False):
 
         self.board = board
         self.WP,self.WN, self.WB, self.WR, self.WQ, self.WK, self.BP, self.BN, self.BB, self.BR, self.BQ, self.BK = WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK
@@ -136,6 +130,11 @@ class Board:
 
         self.W_Lmoves = W_Lmoves
         self.B_Lmoves = B_Lmoves
+
+        self.matedWhite = matedWhite
+        self.matedBlack = matedBlack
+        self.staleWhite = staleWhite
+        self.staleBlack = staleBlack
 
         self.arrayToBitBoards()
         self.whitePawnAttMap = self.whitePawnAttMapDef()
@@ -166,6 +165,12 @@ class Board:
         self.B_PLPmoves = self.PLmoves_blackNight + self.PLmoves_blackBishop + self.PLmoves_blackRook + self.PLmoves_blackQueen + self.PLmoves_blackKing
         self.W_PLmoves = self.PLmoves_whitePawn + self.PLmoves_whiteNight + self.PLmoves_whiteBishop + self.PLmoves_whiteRook + self.PLmoves_whiteQueen + self.PLmoves_whiteKing
         self.B_PLmoves = self.PLmoves_blackPawn + self.PLmoves_blackNight + self.PLmoves_blackBishop + self.PLmoves_blackRook + self.PLmoves_blackQueen + self.PLmoves_blackKing
+        self.whiteCheckUpdate()
+        self.blackCheckUpdate()
+        self.Lmoves_whiteDef()
+        self.Lmoves_blackDef()
+        self.matePatCheck()
+
 
     def arrayToBitBoards(self):
         bitBoardList = [[],[],[],[],[],[],[],[],[],[],[],[]]
@@ -191,10 +196,15 @@ class Board:
         self.B_ALL = self.BP | self.BN | self.BB | self.BR | self.BQ | self.BK
 
     def Display(self):
-        for i in range(0,64,8):
-            print(self.board[i:i+8])
+        ranks = [8,7,6,5,4,3,2,1]
+        files = ['a','b','c','d','e','f','g','h']
+        board8x8 = np.reshape(self.board,(8,8))
+        for i in range(8):
+            print(str(ranks[i]) + ' |',end='')
+            for j in range(8):
+                print(board8x8[i][j]+'|',end='')
             print()
-
+        print('   a b c d e f g h')
 
     def get_board_state(self):
         stateBoard = np.array([' ' for i in range(64)])
@@ -225,9 +235,6 @@ class Board:
                 stateBoard[i] = 'K'
         self.board = stateBoard
         return self.board
-
-    def drawBoard(self):
-        print(self.board)
 
 
     def moveMaker(self,a,b):
@@ -271,7 +278,7 @@ class Board:
                     move_list.append((i,i-9))
                 if (blackPieces120 | whitePieces120)[i-10]== 0 and i-10 in in_index:
                     move_list.append((i,i-10))
-                if i in FILE_2 and (blackPieces120 | whitePieces120)[i-10]==0 and (blackPieces120 | whitePieces120)[i-20]==0 and  i-20 in in_index:
+                if i in RANK_2 and (blackPieces120 | whitePieces120)[i-10]==0 and (blackPieces120 | whitePieces120)[i-20]==0 and  i-20 in in_index:
                     move_list.append((i,i-20))
         return move_list
 
@@ -288,7 +295,7 @@ class Board:
                     move_list.append((i, i + 9))
                 if (blackPieces120 | whitePieces120)[i + 10] == 0 and i + 10 in in_index:
                     move_list.append((i, i + 10))
-                if i in FILE_7 and (blackPieces120 | whitePieces120)[i+10]==0 and (blackPieces120 | whitePieces120)[i+20]==0and  i+20 in in_index:
+                if i in RANK_7 and (blackPieces120 | whitePieces120)[i+10]==0 and (blackPieces120 | whitePieces120)[i+20]==0and  i+20 in in_index:
                     move_list.append((i, i + 20))
         return move_list
 
@@ -1197,6 +1204,8 @@ class Board:
         self.whiteCheckUpdate()
         self.blackCheckUpdate()
 
+
+
     def Lmoves_whiteDef(self):
         self.W_Lmoves = []
         start_state = self.board
@@ -1259,7 +1268,7 @@ class Board:
         board120 = array64_to_array120(self.WP)
         for i in range(120):
             if board120[i] == 1:
-                if i in FILE_8:
+                if i in RANK_8:
                     choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
                     if choice.upper() == 'Q':
                         board120Q = array64_to_array120(self.WQ)
@@ -1292,7 +1301,7 @@ class Board:
         board120 = array64_to_array120(self.BP)
         for i in range(120):
             if board120[i] == 1:
-                if i in FILE_1:
+                if i in RANK_1:
                     choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
                     if choice.upper() == 'Q':
                         board120Q = array64_to_array120(self.BQ)
@@ -1321,10 +1330,18 @@ class Board:
                     else:
                         print('No option',choice)
 
+    def matePatCheck(self):
+        if len(self.W_Lmoves) == 0 and self.WK_checked == True:
+            self.matedWhite = True
+        elif len(self.W_Lmoves) == 0 and self.WK_checked == False:
+            self.staleWhite = True
 
-b = Board()
-b.Lmoves_whiteDef()
-print(b.W_Lmoves)
+        if len(self.B_Lmoves) == 0 and self.BK_checked == True:
+            self.matedBlack = True
+        elif len(self.B_Lmoves) == 0 and self.BK_checked == False:
+            self.staleBlack = True
+
+
 
 
 
