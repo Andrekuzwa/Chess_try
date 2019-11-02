@@ -30,6 +30,7 @@ class Game:
                     elif short[x] not in [item[0] for item in self.OB.W_Lmoves]:
                         print('No legal moves for this position')
                     else:
+                        self.OB.Lmoves_whiteDef()
                         y = input().lower()
                         if y not in short:
                             print("Incorrect input")
@@ -55,6 +56,7 @@ class Game:
                     elif short[x] not in [item[0] for item in self.OB.B_Lmoves]:
                         print('No legal moves for this position')
                     else:
+                        self.OB.Lmoves_blackDef()
                         y = input().lower()
                         if y not in short:
                             print("Incorrect input")
