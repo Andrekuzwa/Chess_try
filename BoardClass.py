@@ -91,8 +91,8 @@ class Board:
     state_board = np.array(['r','n','b','q','k','b','n','r',
                             'p','p','p','p','p','p','p','p',
                             ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
+                            ' ',' ',' ',' ','P',' ',' ',' ',
+                            ' ',' ',' ','p',' ',' ',' ',' ',
                             ' ',' ',' ',' ',' ',' ',' ',' ',
                             'P','P','P','P','P','P','P','P',
                             'R','N','B','Q','K','B','N','R'])
@@ -236,14 +236,12 @@ class Board:
         self.board = stateBoard
         return self.board
 
-
     def moveMaker(self,a,b):
         board120 = array64_to_array120(self.board)
         board120[b] = board120[a]
         board120[a] = ' '
         board64 = array120_to_array64(board120)
         self.board = board64
-
 
     def whitePawnAttMapDef(self):
         board120 = array64_to_array120(self.WP)
@@ -298,6 +296,27 @@ class Board:
                 if i in RANK_7 and (blackPieces120 | whitePieces120)[i+10]==0 and (blackPieces120 | whitePieces120)[i+20]==0and  i+20 in in_index:
                     move_list.append((i, i + 20))
         return move_list
+
+    def enPassantMove(self,a,b):
+        board120 = array64_to_array120(self.board)
+        if a-b == 11:
+            board120[b] = board120[a]
+            board120[a] = ' '
+            board120[a-1] = ' '
+        elif a-b == 9:
+            board120[b] = board120[a]
+            board120[a] = ' '
+            board120[a + 1] = ' '
+        elif a-b == -9:
+            board120[b] = board120[a]
+            board120[a] = ' '
+            board120[a - 1] = ' '
+        elif a-b == -11:
+            board120[b] = board120[a]
+            board120[a] = ' '
+            board120[a + 1] = ' '
+        board64 = array120_to_array64(board120)
+        self.board = board64
 
     def whiteNightAttMapDef(self):
         board120 = array64_to_array120(self.WN)
@@ -1204,8 +1223,6 @@ class Board:
         self.whiteCheckUpdate()
         self.blackCheckUpdate()
 
-
-
     def Lmoves_whiteDef(self):
         self.W_Lmoves = []
         start_state = self.board
@@ -1340,6 +1357,8 @@ class Board:
             self.matedBlack = True
         elif len(self.B_Lmoves) == 0 and self.BK_checked == False:
             self.staleBlack = True
+
+
 
 
 
