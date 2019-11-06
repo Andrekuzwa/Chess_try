@@ -85,17 +85,33 @@ def array120_to_array64(board_10x12):
     board64 = np.asarray(board64)
     return board64
 
+# state_board = np.array(['r','n','b','q','k','b','n','r',
+#                             'p','p','p','p','p','p','p','p',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             'P','P','P','P','P','P','P','P',
+#                             'R','N','B','Q','K','B','N','R'])
 
+# state_board = np.array([' ',' ',' ',' ','k',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ',' ',' ',' ',' ',
+#                             ' ',' ',' ',' ','K',' ',' ',' '])
 
 class Board:
-    state_board = np.array(['r','n','b','q','k','b','n','r',
-                            'p','p','p','p','p','p','p','p',
+    state_board = np.array([' ',' ',' ','n','k','n',' ',' ',
+                            ' ','P',' ',' ',' ',' ',' ',' ',
                             ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ','P',' ',' ',' ',
-                            ' ',' ',' ','p',' ',' ',' ',' ',
                             ' ',' ',' ',' ',' ',' ',' ',' ',
-                            'P','P','P','P','P','P','P','P',
-                            'R','N','B','Q','K','B','N','R'])
+                            ' ',' ',' ',' ',' ',' ',' ',' ',
+                            ' ',' ',' ',' ',' ',' ',' ',' ',
+                            ' ',' ',' ',' ','p',' ',' ','p',
+                            ' ',' ',' ',' ','K',' ',' ',' '])
 
     def __init__(self,board=state_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],
                  WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,
@@ -106,7 +122,7 @@ class Board:
                  whiteRookAttMap = [],blackRookAttMap = [],PLmoves_whiteRook = [],PLmoves_blackRook = [],
                  whiteQueenAttMap = [],blackQueenAttMap = [],PLmoves_whiteQueen = [],PLmoves_blackQueen = [],
                  whiteKingAttMap = [],blackKingAttMap = [],PLmoves_whiteKing = [],PLmoves_blackKing = [],
-                 matedWhite = False,matedBlack = False,staleWhite = False,staleBlack = False):
+                 matedWhite = False,matedBlack = False,draw = False):
 
         self.board = board
         self.WP,self.WN, self.WB, self.WR, self.WQ, self.WK, self.BP, self.BN, self.BB, self.BR, self.BQ, self.BK = WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK
@@ -133,8 +149,8 @@ class Board:
 
         self.matedWhite = matedWhite
         self.matedBlack = matedBlack
-        self.staleWhite = staleWhite
-        self.staleBlack = staleBlack
+        self.draw = draw
+        
 
         self.arrayToBitBoards()
         self.whitePawnAttMap = self.whitePawnAttMapDef()
@@ -169,7 +185,7 @@ class Board:
         self.blackCheckUpdate()
         self.Lmoves_whiteDef()
         self.Lmoves_blackDef()
-        self.matePatCheck()
+        self.mateDrawCheck()
 
 
     def arrayToBitBoards(self):
@@ -240,6 +256,20 @@ class Board:
         board120 = array64_to_array120(self.board)
         board120[b] = board120[a]
         board120[a] = ' '
+
+        if a == 21:
+            self.BSR_moved = True
+        elif a == 28:
+            self.BLR_moved = True
+        elif a == 25:
+            self.BK_moved = True
+        elif a == 91:
+            self.WLR_moved = True
+        elif a == 98:
+            self.WSR_moved = True
+        elif a == 95:
+            self.WK_moved = True
+
         board64 = array120_to_array64(board120)
         self.board = board64
 
@@ -1282,83 +1312,71 @@ class Board:
             self.updateMaps()
 
     def whitePromotion(self):
-        board120 = array64_to_array120(self.WP)
+        board120 = array64_to_array120(self.board)
+        board120P = array64_to_array120(self.WP)
         for i in range(120):
-            if board120[i] == 1:
+            if board120P[i] == 1:
                 if i in RANK_8:
                     choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
                     if choice.upper() == 'Q':
-                        board120Q = array64_to_array120(self.WQ)
-                        board120Q[i] = 1
-                        board120[i] = 0
-                        self.WQ = array120_to_array64(board120Q)
-                        self.WP = array120_to_array64(board120)
+                        board120[i] = 'Q'
+                        self.board = array120_to_array64(board120)
                     elif choice.upper() == 'R':
-                        board120R = array64_to_array120(self.WR)
-                        board120R[i] = 1
-                        board120[i] = 0
-                        self.WR = array120_to_array64(board120R)
-                        self.WP = array120_to_array64(board120)
+                        board120[i] = 'R'
+                        self.board = array120_to_array64(board120)
                     elif choice.upper() == 'B':
-                        board120B = array64_to_array120(self.WB)
-                        board120B[i] = 1
-                        board120[i] = 0
-                        self.WB = array120_to_array64(board120B)
-                        self.WP = array120_to_array64(board120)
+                        board120[i] = 'B'
+                        self.board = array120_to_array64(board120)
                     elif choice.upper() == 'N':
-                        board120N = array64_to_array120(self.WN)
-                        board120N[i] = 1
-                        board120[i] = 0
-                        self.WN = array120_to_array64(board120N)
-                        self.WP = array120_to_array64(board120)
+                        board120[i] = 'B'
+                        self.board = array120_to_array64(board120)
                     else:
                         print('No option',choice)
 
+
     def blackPromotion(self):
-        board120 = array64_to_array120(self.BP)
+        board120 = array64_to_array120(self.board)
+        board120P = array64_to_array120(self.BP)
         for i in range(120):
-            if board120[i] == 1:
+            if board120P[i] == 1:
                 if i in RANK_1:
                     choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
                     if choice.upper() == 'Q':
-                        board120Q = array64_to_array120(self.BQ)
-                        board120Q[i] = 1
-                        board120[i] = 0
-                        self.BQ = array120_to_array64(board120Q)
-                        self.BP = array120_to_array64(board120)
+                        board120[i] = 'q'
+                        self.board = array120_to_array64(board120)
                     elif choice.upper() == 'R':
-                        board120R = array64_to_array120(self.BR)
-                        board120R[i] = 1
-                        board120[i] = 0
-                        self.BR = array120_to_array64(board120R)
-                        self.BP = array120_to_array64(board120)
+                        board120[i] = 'r'
+                        self.board = array120_to_array64(board120)
                     elif choice.upper() == 'B':
-                        board120B = array64_to_array120(self.BB)
-                        board120B[i] = 1
-                        board120[i] = 0
-                        self.BB = array120_to_array64(board120B)
-                        self.BP = array120_to_array64(board120)
+                        board120[i] = 'b'
+                        self.board = array120_to_array64(board120)
                     elif choice.upper() == 'N':
-                        board120N = array64_to_array120(self.BN)
-                        board120N[i] = 1
-                        board120[i] = 0
-                        self.BN = array120_to_array64(board120N)
-                        self.BP = array120_to_array64(board120)
+                        board120[i] = 'n'
+                        self.board = array120_to_array64(board120)
                     else:
-                        print('No option',choice)
+                        print('No option', choice)
 
-    def matePatCheck(self):
+    def mateDrawCheck(self):
         if len(self.W_Lmoves) == 0 and self.WK_checked == True:
-            self.matedWhite = True
+            self.matedWhite = Trueself.ALL
         elif len(self.W_Lmoves) == 0 and self.WK_checked == False:
-            self.staleWhite = True
+            self.draw = True
 
         if len(self.B_Lmoves) == 0 and self.BK_checked == True:
             self.matedBlack = True
         elif len(self.B_Lmoves) == 0 and self.BK_checked == False:
-            self.staleBlack = True
+            self.draw = True
 
-
+        if False not in (self.WK | self.BK == self.ALL):
+            self.draw = True
+        elif False not in (self.WK | self.WN | self.BK == self.ALL) and np.sum(self.WN == 1) == 1:
+            self.draw = True
+        elif False not in (self.BK | self.BN | self.WK == self.ALL) and np.sum(self.BN == 1) == 1:
+            self.draw = True
+        elif False not in (self.WK | self.WB | self.BK == self.ALL) and np.sum(self.WB == 1) == 1:
+            self.draw = True
+        elif False not in (self.BK | self.BB | self.WK == self.ALL) and np.sum(self.BB == 1) == 1:
+            self.draw = True
 
 
 

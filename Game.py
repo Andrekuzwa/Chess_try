@@ -19,6 +19,8 @@ RANK_3 = [71,72,73,74,75,76,77,78]
 RANK_2 = [81,82,83,84,85,86,87,88]
 RANK_1 = [91,92,93,94,95,96,97,98]
 
+
+
 def array64_to_array120(board64):
     board_10x12 = [0 for i in range(120)]
     for i in range(8):
@@ -74,70 +76,86 @@ class Game:
     def start_game(self):
         self.OB.updateMaps()
         self.OB.Display()
-        while True:
-            if self.OB.matedWhite == False and self.OB.matedBlack == False and self.OB.staleWhite == False and self.OB.staleBlack == False:
-                if self.ruch == 1:
-                    self.enPassantLegalMovesDef()
-                    print("Whites turn")
-                    print("Wykonaj ruch używając notacji - np. e2 -> enter -> e4")
-                    x = input().lower()
-                    if x not in short:
-                        print("Incorrect input")
-                    elif short[x] not in [item[0] for item in self.OB.W_Lmoves] and short[x] not in [item[0] for item in self.enPassantMoves]:
-                        print('No legal moves for this position')
-                    else:
-                        y = input().lower()
-                        if y not in short:
-                            print("Incorrect input")
-                        elif short[y] not in [item[1] for item in self.OB.W_Lmoves] and short[y] not in [item[1] for item in self.enPassantMoves]:
-                            print('Illegal move')
-                        else:
-                            if (short[x], short[y]) in self.enPassantMoves:
-                                self.OB.enPassantMove(short[x], short[y])
-                            else:
-                                self.OB.moveMaker(short[x], short[y])
-                            self.OB.updateMaps()
-                            self.OB.Lmoves_whiteDef()
-                            self.OB.Lmoves_blackDef()
-                            self.OB.matePatCheck()
-                            self.moveHist.append((short[x],short[y]))
-                            self.OB.Display()
-                            if self.ruch == 1:
-                                self.ruch = 0
-                            else:
-                                self.ruch = 1
+        while self.OB.matedWhite == False and self.OB.matedBlack == False and self.OB.draw == False:
+            if self.ruch == 1:
+                self.enPassantLegalMovesDef()
+                print("Whites turn")
+                print("Wykonaj ruch używając notacji - np. e2 -> enter -> e4")
+                x = input().lower()
+                if x not in short:
+                    print("Incorrect input")
+                elif short[x] not in [item[0] for item in self.OB.W_Lmoves] and short[x] not in [item[0] for item in self.enPassantMoves]:
+                    print('No legal moves for this position')
                 else:
-                    self.enPassantLegalMovesDef()
-                    print("Blacks turn")
-                    print("Wykonaj ruch używając notacji - np. e2 -> enter -> e4")
-                    x = input().lower()
-                    if x not in short:
+                    y = input().lower()
+                    if y not in short:
                         print("Incorrect input")
-                    elif short[x] not in [item[0] for item in self.OB.B_Lmoves] and  short[x] not in [item[0] for item in self.enPassantMoves]:
-                        print('No legal moves for this position')
+                    elif short[y] not in [item[1] for item in self.OB.W_Lmoves] and short[y] not in [item[1] for item in self.enPassantMoves]:
+                        print('Illegal move')
                     else:
-                        y = input().lower()
-                        if y not in short:
-                            print("Incorrect input")
-                        elif short[y] not in [item[1] for item in self.OB.B_Lmoves] and short[y] not in [item[1] for item in self.enPassantMoves]:
-                            print('Illegal move')
+                        if (short[x], short[y]) in self.enPassantMoves:
+                            self.OB.enPassantMove(short[x], short[y])
+                        elif short[x] == 95 and short[y] == 97:
+                            self.OB.castleWSC()
+                        elif short[x] == 95 and short[y] == 93:
+                            self.OB.castleWLC()
                         else:
-                            if (short[x],short[y]) in self.enPassantMoves:
-                                self.OB.enPassantMove(short[x], short[y])
-                            else:
-                                self.OB.moveMaker(short[x], short[y])
-                            self.OB.updateMaps()
-                            self.OB.Lmoves_whiteDef()
-                            self.OB.Lmoves_blackDef()
-                            self.OB.matePatCheck()
-                            self.moveHist.append((short[x], short[y]))
-                            self.OB.Display()
+                            self.OB.moveMaker(short[x], short[y])
+                        self.OB.updateMaps()
+                        self.OB.whitePromotion()
+                        self.OB.updateMaps()
+                        self.OB.Lmoves_whiteDef()
+                        self.OB.Lmoves_blackDef()
+                        self.OB.mateDrawCheck()
+                        self.moveHist.append((short[x],short[y]))
+                        self.OB.Display()
+                        if self.ruch == 1:
+                            self.ruch = 0
+                        else:
+                            self.ruch = 1
+            else:
+                self.enPassantLegalMovesDef()
+                print("Blacks turn")
+                print("Wykonaj ruch używając notacji - np. e2 -> enter -> e4")
+                x = input().lower()
+                if x not in short:
+                    print("Incorrect input")
+                elif short[x] not in [item[0] for item in self.OB.B_Lmoves] and  short[x] not in [item[0] for item in self.enPassantMoves]:
+                    print('No legal moves for this position')
+                else:
+                    y = input().lower()
+                    if y not in short:
+                        print("Incorrect input")
+                    elif short[y] not in [item[1] for item in self.OB.B_Lmoves] and short[y] not in [item[1] for item in self.enPassantMoves]:
+                        print('Illegal move')
+                    else:
+                        if (short[x],short[y]) in self.enPassantMoves:
+                            self.OB.enPassantMove(short[x], short[y])
+                        elif short[x] == 25 and short[y] == 27:
+                            self.OB.castleBSC()
+                        elif short[x] == 25 and short[y] == 23:
+                            self.OB.castleBLC()
+                        else:
+                            self.OB.moveMaker(short[x], short[y])
+                        self.OB.updateMaps()
+                        self.OB.blackPromotion()
+                        self.OB.updateMaps()
+                        self.OB.Lmoves_whiteDef()
+                        self.OB.Lmoves_blackDef()
+                        self.OB.mateDrawCheck()
+                        self.moveHist.append((short[x], short[y]))
+                        self.OB.Display()
 
-                            if self.ruch == 1:
-                                self.ruch = 0
-                            else:
-                                self.ruch = 1
-
+                        if self.ruch == 1:
+                            self.ruch = 0
+                        else:
+                            self.ruch = 1
+        if self.OB.matedWhite == True:
+            print('BLACK WINS')
+        elif self.OB.matedBlack == True:
+            print("WHITE WINS")
+        elif self.OB.draw == True:
+            print('DRAW')
 
 
     
@@ -180,6 +198,7 @@ class Game:
                         self.enPassantMoves.append(move)
                     self.OB.board = start_state
                     self.OB.updateMaps()
+
 
 
 
