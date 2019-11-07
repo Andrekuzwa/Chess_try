@@ -104,7 +104,7 @@ def array120_to_array64(board_10x12):
 #                             ' ',' ',' ',' ','K',' ',' ',' '])
 
 class Board:
-    state_board = np.array(['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r',
+    state_board = np.array(['r', ' ', ' ', ' ', 'k', 'b', 'n', 'r',
                             'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
                             ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
                             ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
@@ -256,20 +256,6 @@ class Board:
         board120 = array64_to_array120(self.board)
         board120[b] = board120[a]
         board120[a] = ' '
-
-        if a == 21:
-            self.BSR_moved = True
-        elif a == 28:
-            self.BLR_moved = True
-        elif a == 25:
-            self.BK_moved = True
-        elif a == 91:
-            self.WLR_moved = True
-        elif a == 98:
-            self.WSR_moved = True
-        elif a == 95:
-            self.WK_moved = True
-
         board64 = array120_to_array64(board120)
         self.board = board64
 
@@ -1299,16 +1285,16 @@ class Board:
         if self.BSC == True:
             self.board[4] = ' '
             self.board[7] = ' '
-            self.board[6] = 'K'
-            self.board[5] = 'R'
+            self.board[6] = 'k'
+            self.board[5] = 'r'
             self.updateMaps()
 
     def castleBLC(self):
         if self.BLC == True:
             self.board[4] = ' '
             self.board[0] = ' '
-            self.board[2] = 'K'
-            self.board[3] = 'R'
+            self.board[2] = 'k'
+            self.board[3] = 'r'
             self.updateMaps()
 
     def whitePromotion(self):
@@ -1332,7 +1318,6 @@ class Board:
                         self.board = array120_to_array64(board120)
                     else:
                         print('No option',choice)
-
 
     def blackPromotion(self):
         board120 = array64_to_array120(self.board)
@@ -1358,7 +1343,7 @@ class Board:
 
     def mateDrawCheck(self):
         if len(self.W_Lmoves) == 0 and self.WK_checked == True:
-            self.matedWhite = Trueself.ALL
+            self.matedWhite = True
         elif len(self.W_Lmoves) == 0 and self.WK_checked == False:
             self.draw = True
 

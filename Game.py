@@ -105,6 +105,7 @@ class Game:
                             self.OB.castleWLC()
                         else:
                             self.OB.moveMaker(short[x], short[y])
+                        self.kingsRooksMovedCheck(short[x])
                         self.OB.updateMaps()
                         self.OB.whitePromotion()
                         self.OB.updateMaps()
@@ -145,6 +146,7 @@ class Game:
                             self.OB.castleBLC()
                         else:
                             self.OB.moveMaker(short[x], short[y])
+                        self.kingsRooksMovedCheck(short[x])
                         self.OB.updateMaps()
                         self.OB.blackPromotion()
                         self.OB.updateMaps()
@@ -217,6 +219,20 @@ class Game:
                  self.OB.castleWLC, self.OB.castleBSC, self.OB.castleBLC]) == 3:
             self.OB.draw = True
             return True
+
+    def kingsRooksMovedCheck(self,a):
+        if a == 21:
+            self.BSR_moved = True
+        elif a == 28:
+            self.BLR_moved = True
+        elif a == 25:
+            self.BK_moved = True
+        elif a == 91:
+            self.WLR_moved = True
+        elif a == 98:
+            self.WSR_moved = True
+        elif a == 95:
+            self.WK_moved = True
 
 board = Board()
 game1 = Game(board)
