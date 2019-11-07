@@ -104,14 +104,14 @@ def array120_to_array64(board_10x12):
 #                             ' ',' ',' ',' ','K',' ',' ',' '])
 
 class Board:
-    state_board = np.array([' ',' ',' ','n','k','n',' ',' ',
-                            ' ','P',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ',' ',
-                            ' ',' ',' ',' ',' ',' ',' ','p',
-                            ' ',' ',' ',' ','K',' ',' ',' '])
+    state_board = np.array(['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r',
+                            'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
+                            'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'])
 
     def __init__(self,board=state_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],
                  WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,

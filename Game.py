@@ -94,7 +94,7 @@ class Game:
                     y = input().lower()
                     if y not in short:
                         print("Incorrect input")
-                    elif short[y] not in [item[1] for item in self.OB.W_Lmoves] and short[y] not in [item[1] for item in self.enPassantMoves]:
+                    elif short[y] not in [item[1] for item in self.OB.W_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                         print('Illegal move')
                     else:
                         if (short[x], short[y]) in self.enPassantMoves:
@@ -134,7 +134,7 @@ class Game:
                     y = input().lower()
                     if y not in short:
                         print("Incorrect input")
-                    elif short[y] not in [item[1] for item in self.OB.B_Lmoves] and short[y] not in [item[1] for item in self.enPassantMoves]:
+                    elif short[y] not in [item[1] for item in self.OB.B_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                         print('Illegal move')
                     else:
                         if (short[x],short[y]) in self.enPassantMoves:
