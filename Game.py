@@ -1,5 +1,6 @@
 import numpy as np
 from BoardClass import Board
+
 short = {'a8':21,'b8':22,'c8':23,'d8':24,'e8':25,'f8':26,'g8':27,'h8':28,
          'a7':31,'b7':32,'c7':33,'d7':34,'e7':35,'f7':36,'g7':37,'h7':38,
          'a6':41,'b6':42,'c6':43,'d6':44,'e6':45,'f6':46,'g6':47,'h6':48,
@@ -66,12 +67,13 @@ def array120_to_array64(board_10x12):
 
 class Game:
 
-    def __init__(self,OB,ruch=1,moveHist = [],draw = False,enPassantMoves = []):
+    def __init__(self,OB,ruch=1,moveHist = [],draw = False,enPassantMoves = [],boardStateList=[]):
         self.OB = OB
         self.ruch = ruch
         self.moveHist = moveHist
         self.draw = draw
         self.enPassantMoves = enPassantMoves
+        self.boardStateList = boardStateList
 
     def start_game(self):
         self.OB.updateMaps()
@@ -79,6 +81,8 @@ class Game:
         while self.OB.matedWhite == False and self.OB.matedBlack == False and self.OB.draw == False:
             if self.ruch == 1:
                 self.enPassantLegalMovesDef()
+                if self.repetitionDraw() == True:
+                    break
                 print("Whites turn")
                 print("Wykonaj ruch używając notacji - np. e2 -> enter -> e4")
                 x = input().lower()
@@ -109,12 +113,16 @@ class Game:
                         self.OB.mateDrawCheck()
                         self.moveHist.append((short[x],short[y]))
                         self.OB.Display()
+
                         if self.ruch == 1:
                             self.ruch = 0
                         else:
                             self.ruch = 1
+
             else:
                 self.enPassantLegalMovesDef()
+                if self.repetitionDraw() == True:
+                    break
                 print("Blacks turn")
                 print("Wykonaj ruch używając notacji - np. e2 -> enter -> e4")
                 x = input().lower()
@@ -200,7 +208,15 @@ class Game:
                     self.OB.updateMaps()
 
 
-
+    def repetitionDraw(self):
+        self.boardStateList.append(
+            [list(self.OB.board), self.OB.W_Lmoves, self.OB.B_Lmoves, self.enPassantMoves, self.OB.castleWSC,
+             self.OB.castleWLC, self.OB.castleBSC, self.OB.castleBLC])
+        if self.boardStateList.count(
+                [list(self.OB.board), self.OB.W_Lmoves, self.OB.B_Lmoves, self.enPassantMoves, self.OB.castleWSC,
+                 self.OB.castleWLC, self.OB.castleBSC, self.OB.castleBLC]) == 3:
+            self.OB.draw = True
+            return True
 
 board = Board()
 game1 = Game(board)
