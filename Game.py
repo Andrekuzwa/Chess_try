@@ -10,6 +10,8 @@ short = {'a8':21,'b8':22,'c8':23,'d8':24,'e8':25,'f8':26,'g8':27,'h8':28,
          'a2':81,'b2':82,'c2':83,'d2':84,'e2':85,'f2':86,'g2':87,'h2':88,
          'a1':91,'b1':92,'c1':93,'d1':94,'e1':95,'f1':96,'g1':97,'h1':98}
 
+long = dict(zip(short.values(),short.keys()))
+
 
 RANK_8 = [21,22,23,24,25,26,27,28]
 RANK_7 = [31,32,33,34,35,36,37,38]
@@ -91,6 +93,7 @@ class Game:
                 elif short[x] not in [item[0] for item in self.OB.W_Lmoves] and short[x] not in [item[0] for item in self.enPassantMoves]:
                     print('No legal moves for this position')
                 else:
+                    print([long[item[1]] for item in self.OB.W_Lmoves if item[0] == short[x]] + [long[item[1]] for item in self.enPassantMoves if item[0] == short[x]])
                     y = input().lower()
                     if y not in short:
                         print("Incorrect input")
@@ -132,6 +135,7 @@ class Game:
                 elif short[x] not in [item[0] for item in self.OB.B_Lmoves] and  short[x] not in [item[0] for item in self.enPassantMoves]:
                     print('No legal moves for this position')
                 else:
+                    print([long[item[1]] for item in self.OB.B_Lmoves if item[0] == short[x]] + [long[item[1]] for item in self.enPassantMoves if item[0] == short[x]])
                     y = input().lower()
                     if y not in short:
                         print("Incorrect input")

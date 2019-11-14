@@ -30,7 +30,14 @@ import numpy as np
 
 in_index = [21,22,23,24,25,26,27,28,31,32,33,34,35,36,37,38,41,42,43,44,45,46,47,48,51,52,53,54,55,56,57,58,61,62,63,64,65,66,67,68,71,72,73,74,75,76,77,78,81,82,83,84,85,86,87,88,91,92,93,94,95,96,97,98]
 
-
+# state_board = np.array(['r', ' ', ' ', ' ', ' ', ' ', ' ', 'r',
+#                         ' ', ' ', 'p', ' ', 'k', 'p', ' ', 'N',
+#                         ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ',
+#                         'p', ' ', ' ', 'p', ' ', ' ', ' ', ' ',
+#                         'P', 'p', ' ', 'P', ' ', ' ', ' ', ' ',
+#                         'K', 'P', ' ', 'B', 'P', ' ', 'P', ' ',
+#                         ' ', ' ', ' ', ' ', ' ', 'P', ' ', 'P',
+#                         ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R'])
 
 
 RANK_8 = [21,22,23,24,25,26,27,28]
@@ -104,14 +111,14 @@ def array120_to_array64(board_10x12):
 #                             ' ',' ',' ',' ','K',' ',' ',' '])
 
 class Board:
-    state_board = np.array(['r', ' ', ' ', ' ', 'k', 'b', 'n', 'r',
-                            'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p',
-                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-                            'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P',
-                            'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'])
+    state_board = np.array(['r', ' ', ' ', ' ', ' ', ' ', ' ', 'r',
+                            ' ', ' ', 'p', ' ', 'k', 'p', ' ', 'N',
+                            ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ',
+                            'p', ' ', ' ', 'p', ' ', ' ', ' ', ' ',
+                            'P', 'p', ' ', 'P', ' ', ' ', ' ', ' ',
+                            'K', 'P', ' ', 'B', 'P', ' ', 'P', ' ',
+                            ' ', ' ', ' ', ' ', ' ', 'P', ' ', 'P',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R'])
 
     def __init__(self,board=state_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],
                  WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,
@@ -122,7 +129,7 @@ class Board:
                  whiteRookAttMap = [],blackRookAttMap = [],PLmoves_whiteRook = [],PLmoves_blackRook = [],
                  whiteQueenAttMap = [],blackQueenAttMap = [],PLmoves_whiteQueen = [],PLmoves_blackQueen = [],
                  whiteKingAttMap = [],blackKingAttMap = [],PLmoves_whiteKing = [],PLmoves_blackKing = [],
-                 matedWhite = False,matedBlack = False,draw = False):
+                 matedWhite = False,matedBlack = False,draw = False,evaluation = 0):
 
         self.board = board
         self.WP,self.WN, self.WB, self.WR, self.WQ, self.WK, self.BP, self.BN, self.BB, self.BR, self.BQ, self.BK = WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK
@@ -150,6 +157,7 @@ class Board:
         self.matedWhite = matedWhite
         self.matedBlack = matedBlack
         self.draw = draw
+        self.evaluation = evaluation
         
 
         self.arrayToBitBoards()
@@ -1105,7 +1113,7 @@ class Board:
                     move_list.append((i, i + 9))
                 if blackPieces120[i + 10] == 1 or whitePieces120[i + 10] == 0 and i + 10 in in_index:
                     move_list.append((i, i + 10))
-                if blackPieces120[i + 11] == 1 or whitePieces120[i + 1] == 0 and i + 11 in in_index:
+                if blackPieces120[i + 11] == 1 or whitePieces120[i + 11] == 0 and i + 11 in in_index:
                     move_list.append((i, i + 11))
         return move_list
 
@@ -1363,6 +1371,48 @@ class Board:
         elif False not in (self.BK | self.BB | self.WK == self.ALL) and np.sum(self.BB == 1) == 1:
             self.draw = True
 
+    def evaluate(self):
+        W_value = 0
+        B_value = 0
+        for i,j in zip(self.WP,self.BP):
+            if i == 1:
+                W_value+=10
+            if j == 1:
+                B_value+=10
+        for i,j in zip(self.WN,self.BN):
+            if i == 1:
+                W_value+=30
+            if j == 1:
+                B_value+=30
+        for i,j in zip(self.WB,self.BB):
+            if i == 1:
+                W_value+=35
+            if j == 1:
+                B_value+=35
+        for i,j in zip(self.WR,self.BR):
+            if i == 1:
+                W_value+=50
+            if j == 1:
+                B_value+=50
+        for i,j in zip(self.WQ,self.BQ):
+            if i == 1:
+                W_value+=90
+            if j == 1:
+                B_value+=90
+        for i,j in zip(self.WK,self.BK):
+            if i == 1:
+                W_value+=9000
+            if j == 1:
+                B_value+=9000
+        self.evaluation = W_value - B_value
+
+
+
+
+
+
+
+        pass
 
 
 
