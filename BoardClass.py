@@ -111,14 +111,14 @@ def array120_to_array64(board_10x12):
 #                             ' ',' ',' ',' ','K',' ',' ',' '])
 
 class Board:
-    state_board = np.array(['r', ' ', ' ', ' ', ' ', ' ', ' ', 'r',
-                            ' ', ' ', 'p', ' ', 'k', 'p', ' ', 'N',
-                            ' ', ' ', ' ', ' ', 'p', ' ', ' ', ' ',
-                            'p', ' ', ' ', 'p', ' ', ' ', ' ', ' ',
-                            'P', 'p', ' ', 'P', ' ', ' ', ' ', ' ',
-                            'K', 'P', ' ', 'B', 'P', ' ', 'P', ' ',
-                            ' ', ' ', ' ', ' ', ' ', 'P', ' ', 'P',
-                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'R'])
+    state_board = np.array([' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', 'P', ' ', ' ', ' ', ' ',
+                            ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '])
 
     def __init__(self,board=state_board,WP=[],WN=[],WB=[],WR=[],WQ=[],WK=[],BP=[],BN=[],BB=[],BR=[],BQ=[],BK=[],ALL=[],W_ALL = [],B_ALL =[],
                  WSC=True,WLC=True,BSC=True,BLC=True,WK_moved = False,BK_moved = False,WSR_moved = False,WLR_moved=False,
@@ -1405,14 +1405,6 @@ class Board:
             if j == 1:
                 B_value+=9000
         self.evaluation = W_value - B_value
-
-
-
-
-
-
-
-        pass
 
 
 

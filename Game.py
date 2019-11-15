@@ -76,9 +76,9 @@ class Game:
         self.draw = draw
         self.enPassantMoves = enPassantMoves
         self.boardStateList = boardStateList
+        self.OB.updateMaps()
 
     def start_game(self):
-        self.OB.updateMaps()
         self.OB.Display()
         while self.OB.matedWhite == False and self.OB.matedBlack == False and self.OB.draw == False:
             if self.ruch == 1:
@@ -100,28 +100,8 @@ class Game:
                     elif short[y] not in [item[1] for item in self.OB.W_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                         print('Illegal move')
                     else:
-                        if (short[x], short[y]) in self.enPassantMoves:
-                            self.OB.enPassantMove(short[x], short[y])
-                        elif short[x] == 95 and short[y] == 97:
-                            self.OB.castleWSC()
-                        elif short[x] == 95 and short[y] == 93:
-                            self.OB.castleWLC()
-                        else:
-                            self.OB.moveMaker(short[x], short[y])
-                        self.kingsRooksMovedCheck(short[x])
-                        self.OB.updateMaps()
-                        self.OB.whitePromotion()
-                        self.OB.updateMaps()
-                        self.OB.Lmoves_whiteDef()
-                        self.OB.Lmoves_blackDef()
-                        self.OB.mateDrawCheck()
-                        self.moveHist.append((short[x],short[y]))
+                        self.makeGameMove(x,y)
                         self.OB.Display()
-
-                        if self.ruch == 1:
-                            self.ruch = 0
-                        else:
-                            self.ruch = 1
 
             else:
                 self.enPassantLegalMovesDef()
@@ -142,28 +122,10 @@ class Game:
                     elif short[y] not in [item[1] for item in self.OB.B_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                         print('Illegal move')
                     else:
-                        if (short[x],short[y]) in self.enPassantMoves:
-                            self.OB.enPassantMove(short[x], short[y])
-                        elif short[x] == 25 and short[y] == 27:
-                            self.OB.castleBSC()
-                        elif short[x] == 25 and short[y] == 23:
-                            self.OB.castleBLC()
-                        else:
-                            self.OB.moveMaker(short[x], short[y])
-                        self.kingsRooksMovedCheck(short[x])
-                        self.OB.updateMaps()
-                        self.OB.blackPromotion()
-                        self.OB.updateMaps()
-                        self.OB.Lmoves_whiteDef()
-                        self.OB.Lmoves_blackDef()
-                        self.OB.mateDrawCheck()
-                        self.moveHist.append((short[x], short[y]))
+                        self.makeGameMove(x,y)
                         self.OB.Display()
 
-                        if self.ruch == 1:
-                            self.ruch = 0
-                        else:
-                            self.ruch = 1
+
         if self.OB.matedWhite == True:
             print('BLACK WINS')
         elif self.OB.matedBlack == True:
@@ -172,7 +134,59 @@ class Game:
             print('DRAW')
 
 
-    
+    def makeGameMove(self,x,y):
+        if (x, y) in self.enPassantMoves:
+            self.OB.enPassantMove(short[x], short[y])
+        elif x == 25 and y == 27:
+            self.OB.castleBSC()
+        elif x == 25 and y == 23:
+            self.OB.castleBLC()
+        elif x == 95 and y == 97:
+            self.OB.castleWSC()
+        elif x == 95 and y == 93:
+            self.OB.castleWLC()
+        else:
+            self.OB.moveMaker(x, y)
+        self.kingsRooksMovedCheck(x)
+        self.OB.updateMaps()
+        self.OB.blackPromotion()
+        self.OB.updateMaps()
+        self.OB.Lmoves_whiteDef()
+        self.OB.Lmoves_blackDef()
+        self.OB.mateDrawCheck()
+        self.moveHist.append((x, y))
+        if self.ruch == 1:
+            self.ruch = 0
+        else:
+            self.ruch = 1
+
+
+    # def makeGameMove(self,x,y):
+    #     if (short[x], short[y]) in self.enPassantMoves:
+    #         self.OB.enPassantMove(short[x], short[y])
+    #     elif short[x] == 25 and short[y] == 27:
+    #         self.OB.castleBSC()
+    #     elif short[x] == 25 and short[y] == 23:
+    #         self.OB.castleBLC()
+    #     elif short[x] == 95 and short[y] == 97:
+    #         self.OB.castleWSC()
+    #     elif short[x] == 95 and short[y] == 93:
+    #         self.OB.castleWLC()
+    #     else:
+    #         self.OB.moveMaker(short[x], short[y])
+    #     self.kingsRooksMovedCheck(short[x])
+    #     self.OB.updateMaps()
+    #     self.OB.blackPromotion()
+    #     self.OB.updateMaps()
+    #     self.OB.Lmoves_whiteDef()
+    #     self.OB.Lmoves_blackDef()
+    #     self.OB.mateDrawCheck()
+    #     self.moveHist.append((short[x], short[y]))
+    #     if self.ruch == 1:
+    #         self.ruch = 0
+    #     else:
+    #         self.ruch = 1
+    #
     def enPassantLegalMovesDef(self):
         self.enPassantMoves = []
         start_state = self.OB.board
@@ -238,6 +252,38 @@ class Game:
         elif a == 95:
             self.WK_moved = True
 
-board = Board()
-game1 = Game(board)
-game1.start_game()
+
+# game1 = Game(Board())
+# game1.start_game()
+
+
+class Node:
+    def __init__(self,depth,gameBoard,value=0):
+        self.depth = depth
+        self.value = value
+        self.gameBoard = gameBoard
+        self.children = []
+        self.CreateKids()
+
+    def CreateKids(self):
+        if self.depth >= 0:
+            if self.gameBoard.ruch == 1:
+                if len(self.gameBoard.OB.W_Lmoves) > 0:
+                    for move in self.gameBoard.OB.W_Lmoves:
+                        state = self.gameBoard
+                        state.makeGameMove(move[0],move[1])
+                        print('WW')
+                        self.children.append(Node(self.depth-1,state))
+            elif self.gameBoard.ruch == 0:
+                if len(self.gameBoard.OB.B_Lmoves) > 0:
+                    for move in self.gameBoard.OB.B_Lmoves:
+                        state = self.gameBoard
+                        state.makeGameMove(move[0], move[1])
+                        print('BB')
+                        self.children.append(Node(self.depth-1,state))
+
+        else:
+            return None
+
+node = Node(1,Game(Board()))
+print('done')
