@@ -285,5 +285,5 @@ class Node:
         else:
             return None
 
-node = Node(1,Game(Board()))
+node = Node(0,Game(Board()))
 print('done')
