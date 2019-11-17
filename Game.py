@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 from BoardClass import Board
 
 short = {'a8':21,'b8':22,'c8':23,'d8':24,'e8':25,'f8':26,'g8':27,'h8':28,
@@ -100,7 +101,7 @@ class Game:
                     elif short[y] not in [item[1] for item in self.OB.W_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                         print('Illegal move')
                     else:
-                        self.makeGameMove(x,y)
+                        self.makeGameMove(short[x],short[y])
                         self.OB.Display()
 
             else:
@@ -122,7 +123,7 @@ class Game:
                     elif short[y] not in [item[1] for item in self.OB.B_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                         print('Illegal move')
                     else:
-                        self.makeGameMove(x,y)
+                        self.makeGameMove(short[x],short[y])
                         self.OB.Display()
 
 
@@ -136,7 +137,7 @@ class Game:
 
     def makeGameMove(self,x,y):
         if (x, y) in self.enPassantMoves:
-            self.OB.enPassantMove(short[x], short[y])
+            self.OB.enPassantMove(x, y)
         elif x == 25 and y == 27:
             self.OB.castleBSC()
         elif x == 25 and y == 23:
@@ -252,38 +253,167 @@ class Game:
         elif a == 95:
             self.WK_moved = True
 
-
+#
 # game1 = Game(Board())
 # game1.start_game()
 
 
-class Node:
-    def __init__(self,depth,gameBoard,value=0):
-        self.depth = depth
-        self.value = value
-        self.gameBoard = gameBoard
-        self.children = []
-        self.CreateKids()
 
-    def CreateKids(self):
-        if self.depth >= 0:
-            if self.gameBoard.ruch == 1:
-                if len(self.gameBoard.OB.W_Lmoves) > 0:
-                    for move in self.gameBoard.OB.W_Lmoves:
-                        state = self.gameBoard
-                        state.makeGameMove(move[0],move[1])
-                        print('WW')
-                        self.children.append(Node(self.depth-1,state))
-            elif self.gameBoard.ruch == 0:
-                if len(self.gameBoard.OB.B_Lmoves) > 0:
-                    for move in self.gameBoard.OB.B_Lmoves:
-                        state = self.gameBoard
-                        state.makeGameMove(move[0], move[1])
-                        print('BB')
-                        self.children.append(Node(self.depth-1,state))
 
-        else:
-            return None
+# def minimaxRoot(depth,board,ruch):
+#     if ruch == 1:
+#         L_moves = board.OB.W_Lmoves
+#         bestScore = -999999
+#     else:
+#         L_moves = board.OB.B_Lmoves
+#         bestScore = 999999
+#     bestMove = None
+#     for move in L_moves:
+#         board_save = board
+#         board_save.makeGameMove(move[0],move[1])
+#         value = max()
 
-node = Node(1,Game(Board()))
-print('done')
+def minimaxRoot(depth,board,is_max):
+    possibleWmoves = board.OB.W_Lmoves
+    possibleBmoves = board.OB.B_Lmoves
+    bestMove = -999999
+    bestMoveFinal = None
+    nodes = 0
+    if is_max == 1:
+        possibleMoves = possibleWmoves
+    else:
+        possibleMoves = possibleBmoves
+    for move in possibleMoves:
+        board_save = copy.deepcopy(board)
+        board_save.makeGameMove(move[0],move[1])
+        board_save.OB.Display()
+        value = max(bestMove,minimax(depth-1,board_save,-10000000,10000000,abs(is_max-1)))
+        if value > bestMove:
+            print("Best score",bestMove)
+            print("Best move", str(bestMoveFinal))
+            bestMove = value
+            bestMoveFinal = move
+    return bestMoveFinal
+
+nodes = 0
+def minimax(depth,board,alpha,beta,is_max):
+    global nodes
+    nodes+=1
+    if (depth == 0):
+        board.OB.evaluate()
+        return board.OB.evaluation
+    possibleWmoves = board.OB.W_Lmoves
+    possibleBmoves = board.OB.B_Lmoves
+    if is_max == 1:
+        bestMove = -999999
+        for move in possibleWmoves:
+            board_save = copy.deepcopy(board)
+            board_save.makeGameMove(move[0],move[1])
+            board_save.OB.Display
+            bestMove = max(bestMove,minimax(depth-1,board_save,alpha,beta,abs(is_max-1)))
+            del board_save
+            alpha = max(alpha,bestMove)
+            if beta <= alpha:
+                return bestMove
+        return bestMove
+    else:
+        bestMove = 999999
+        for move in possibleBmoves:
+            board_save = copy.deepcopy(board)
+            board_save.makeGameMove(move[0],move[1])
+            board_save.OB.Display
+            bestMove = min(bestMove,minimax(depth-1,board_save,alpha,beta,abs(is_max-1)))
+            del board_save
+            beta = min(beta,bestMove)
+            if beta <= alpha:
+                return bestMove
+        return bestMove
+
+# class Node:
+#     def __init__(self,depth,gameBoard,value=0):
+#         self.depth = depth
+#         self.value = value
+#         self.gameBoard = gameBoard
+#         self.children = []
+#         self.CreateKids()
+#
+#     def CreateKids(self):
+#         if self.depth >= 0:
+#             if self.gameBoard.ruch == 1:
+#                 if len(self.gameBoard.OB.W_Lmoves) > 0:
+#                     for move in self.gameBoard.OB.W_Lmoves:
+#                         state = self.gameBoard
+#                         state.makeGameMove(move[0],move[1])
+#                         print('WW')
+#                         self.children.append(Node(self.depth-1,state))
+#             elif self.gameBoard.ruch == 0:
+#                 if len(self.gameBoard.OB.B_Lmoves) > 0:
+#                     for move in self.gameBoard.OB.B_Lmoves:
+#                         state = self.gameBoard
+#                         state.makeGameMove(move[0], move[1])
+#                         print('BB')
+#                         self.children.append(Node(self.depth-1,state))
+#
+#         else:
+#             return None
+#
+# #node = Node(1,Game(Board()))
+#
+
+
+
+game = Game(Board())
+print(minimaxRoot(2,game,game.ruch))
+print("Number of nodes:",nodes)
+#
+# class Minimax:
+#     def __init__(self,position,depth,alpha,beta,maxPlayer):
+#         self.position = position
+#         self.depth = depth
+#         self.alpha = alpha
+#         self.beta = beta
+#         self.maxPlayer = maxPlayer
+#         self.children = []
+#         self.value = self.CreateChildren()
+#         self.bestMove = None
+#
+#     def CreateChildren(self):
+#         if self.depth == 0:
+#             self.position.OB.evaluate()
+#             return self.position.OB.evaluation
+#         if self.maxPlayer == 1:
+#             maxEval = -999999
+#             for move in self.position.OB.W_Lmoves:
+#                 board_save = self.position
+#                 board_save.makeGameMove(move[0],move[1])
+#                 self.children.append(Minimax(board_save,self.depth-1,self.alpha,self.beta,0))
+#                 maxEval = max([i.value for i in self.children])
+#                 bestMove = [i.position.moveHist[-1] for i in self.children if i.value == maxEval]
+#                 self.alpha = max(self.alpha,maxEval)
+#                 if self.beta <= self.alpha:
+#                     break
+#             return bestMove
+#         else:
+#             minEval = 999999
+#             for move in self.position.OB.W_Lmoves:
+#                 board_save = self.position
+#                 board_save.makeGameMove(move[0],move[1])
+#                 self.children.append(Minimax(board_save,self.depth-1,self.alpha,self.beta,1))
+#                 bestMove = [i.position.moveHist[-1] for i in self.children if i.value == minEval]
+#                 minEval = min([i.value for i in self.children])
+#                 self.beta = min(self.beta,minEval)
+#                 if self.beta <= self.alpha:
+#                     break
+#             return bestMove
+#
+# game = Game(Board())
+# #max = Minimax(game,1,-9999999,9999999,1)
+# # print(max.value)
+#
+# game_list = []
+# for i in game.OB.W_Lmoves:
+#     game_list.append(game)
+#     game_list[-1].makeGameMove(i[0],i[1])
+#
+# for i in game_list:
+#     game_list[-1].OB.Display()

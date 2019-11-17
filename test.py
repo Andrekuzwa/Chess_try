@@ -91,3 +91,85 @@ if __name__ == '__main__':
             i_stickTotal -= bestChoice
             WinCheck(i_stickTotal, i_curPlayer)
             i_curPlayer *= -1  # switch players
+
+
+
+class Node:
+    def __init__(self,depth,gameBoard,value=0):
+        self.depth = depth
+        self.value = value
+        self.gameBoard = gameBoard
+        self.children = []
+        self.CreateKids()
+
+    def CreateKids(self):
+        if self.depth >= 0:
+            if self.gameBoard.ruch == 1:
+                if len(self.gameBoard.OB.W_Lmoves) > 0:
+                    for move in self.gameBoard.OB.W_Lmoves:
+                        state = self.gameBoard
+                        state.makeGameMove(move[0],move[1])
+                        print('WW')
+                        self.children.append(Node(self.depth-1,state))
+            elif self.gameBoard.ruch == 0:
+                if len(self.gameBoard.OB.B_Lmoves) > 0:
+                    for move in self.gameBoard.OB.B_Lmoves:
+                        state = self.gameBoard
+                        state.makeGameMove(move[0], move[1])
+                        print('BB')
+                        self.children.append(Node(self.depth-1,state))
+
+        else:
+            return None
+
+#node = Node(1,Game(Board()))
+
+
+def minimax(depth,board,alpha,beta,is_max):
+    if (depth == 0):
+        board.OB.evaluate()
+        return board.OB.evaluation
+    possibleWmoves = board.OB.W_Lmoves
+    possibleBmoves = board.OB.B_Lmoves
+    if is_max == 1:
+        bestMove = -999999
+        for move in possibleWmoves:
+            board_save = board
+            board_save.makeGameMove(move[0],move[1])
+            bestMove = max(bestMove,minimax(depth-1,board_save,alpha,beta,abs(is_max-1)))
+            alpha = max(alpha,bestMove)
+            if beta <= alpha:
+                return bestMove
+        return bestMove
+    else:
+        bestMove = 999999
+        for move in possibleBmoves:
+            board_save = board
+            board_save.makeGameMove(move[0],move[1])
+            bestMove = min(bestMove,minimax(depth-1,board_save,alpha,beta,abs(is_max-1)))
+            beta = min(beta,bestMove)
+            if beta <= alpha:
+                return bestMove
+        return bestMove
+
+
+def minimaxRoot(depth,board,is_max):
+    possibleWmoves = board.OB.W_Lmoves
+    possibleBmoves = board.OB.B_Lmoves
+    bestMove = -999999
+    bestMoveFinal = None
+    nodes = 0
+    if is_max == 1:
+        possibleMoves = possibleWmoves
+    else:
+        possibleMoves = possibleBmoves
+    for move in possibleMoves:
+        board_save = board
+        board_save.makeGameMove(move[0],move[1])
+        value = max(bestMove,minimax(depth-1,board_save,-10000000,10000000,abs(is_max-1)))
+        if value > bestMove:
+            print("Best score",bestMove)
+            print("Best move", str(bestMoveFinal))
+            bestMove = value
+            bestMoveFinal = move
+    return bestMoveFinal
