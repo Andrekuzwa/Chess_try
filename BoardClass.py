@@ -1279,7 +1279,7 @@ class Board:
             self.board[63] = ' '
             self.board[62] = 'K'
             self.board[61] = 'R'
-            self.updateMaps()
+
 
     def castleWLC(self):
         if self.WLC == True:
@@ -1287,7 +1287,7 @@ class Board:
             self.board[56] = ' '
             self.board[58] = 'K'
             self.board[59] = 'R'
-            self.updateMaps()
+
 
     def castleBSC(self):
         if self.BSC == True:
@@ -1295,7 +1295,7 @@ class Board:
             self.board[7] = ' '
             self.board[6] = 'k'
             self.board[5] = 'r'
-            self.updateMaps()
+
 
     def castleBLC(self):
         if self.BLC == True:
@@ -1303,7 +1303,7 @@ class Board:
             self.board[0] = ' '
             self.board[2] = 'k'
             self.board[3] = 'r'
-            self.updateMaps()
+
 
     def whitePromotion(self):
         board120 = array64_to_array120(self.board)
