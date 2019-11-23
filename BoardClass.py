@@ -219,13 +219,22 @@ class Board:
         self.B_ALL = self.BP | self.BN | self.BB | self.BR | self.BQ | self.BK
 
     def Display(self):
+        style = {
+            "r": u"♖", "R": u"♜",
+            "n": u"♘", "N": u"♞",
+            "b": u"♗", "B": u"♝",
+            "q": u"♕", "Q": u"♛",
+            "k": u"♔", "K": u"♚",
+            "p": u"♙", "P": u"♟",
+            ' ':u'\u2002'+u'\u2002'
+        }
         ranks = [8,7,6,5,4,3,2,1]
         files = ['a','b','c','d','e','f','g','h']
         board8x8 = np.reshape(self.board,(8,8))
         for i in range(8):
-            print(str(ranks[i]) + ' |',end='')
+            print(str(ranks[i])+' ',end='')
             for j in range(8):
-                print(board8x8[i][j]+'|',end='')
+                print(style[board8x8[i][j]]+'|',end='')
             print()
         print('   a b c d e f g h')
 

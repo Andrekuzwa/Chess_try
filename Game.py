@@ -354,7 +354,7 @@ class Game:
             self.WK_moved = True
 
 class Game_vs_AI:
-    def __init__(self,OB,playerStarts,ruch=1,moveHist = [],draw = False,enPassantMoves = [],boardStateList=[]):
+    def __init__(self,OB,playerStarts,depth,ruch=1,moveHist = [],draw = False,enPassantMoves = [],boardStateList=[]):
         self.OB = OB
         self.ruch = ruch
         self.moveHist = moveHist
@@ -362,6 +362,7 @@ class Game_vs_AI:
         self.playerStarts = playerStarts
         self.enPassantMoves = enPassantMoves
         self.boardStateList = boardStateList
+        self.depth = depth
         self.OB.updateMaps()
 
     def start_game_vs_AI(self):
@@ -409,7 +410,7 @@ class Game_vs_AI:
                             self.OB.Display()
                     else:
                         start_time = time.time()
-                        move = self.minimaxRoot(1, game, self.ruch)
+                        move = self.minimaxRoot(self.depth, game, self.ruch)
                         game.makeGameMove(move[0],move[1])
                         self.makeGameMove(move[0],move[1])
                         self.OB.Display()
@@ -430,7 +431,7 @@ class Game_vs_AI:
                             self.OB.Display()
                     else:
                         game.enPassantLegalMovesDef()
-                        move = self.minimaxRoot(1, game, self.ruch)
+                        move = self.minimaxRoot(self.depth, game, self.ruch)
                         game.makeGameMove(move[0], move[1])
                         self.makeGameMove(move[0], move[1])
                         self.OB.Display()
@@ -627,7 +628,7 @@ class Game_vs_AI:
 # game1 = Game(Board())
 # game1.start_game_vs_AI()
 
-gameAI = Game_vs_AI(Board(),True)
+gameAI = Game_vs_AI(Board(),True,2)
 gameAI.start_game_vs_AI()
 # def minimaxRoot(depth,board,is_max):
 #     possibleWmoves = board.OB.W_Lmoves
