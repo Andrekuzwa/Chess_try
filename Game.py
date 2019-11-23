@@ -72,13 +72,16 @@ def array120_to_array64(board_10x12):
 
 
 class Game:
-    def __init__(self,OB,ruch=1,moveHist = [],draw = False,enPassantMoves = [],boardStateList=[]):
+    def __init__(self,OB,playerStarts,ruch=1,moveHist = [],draw = False,enPassantMoves = [],boardStateList=[],evaluation = 0,end_game=False):
         self.OB = OB
         self.ruch = ruch
         self.moveHist = moveHist
         self.draw = draw
         self.enPassantMoves = enPassantMoves
         self.boardStateList = boardStateList
+        self.playerStarts = playerStarts
+        self.evaluation = evaluation
+        self.end_game = end_game
         self.OB.updateMaps()
 
     def start_game_1vs1(self):
@@ -135,6 +138,130 @@ class Game:
         elif self.OB.draw == True:
             print('DRAW')
 
+    def evaluate(self):
+        W_value = 0
+        B_value = 0
+        W_material = 0
+        B_material = 0
+
+        pawn_map = [0, 0, 0, 0, 0, 0, 0, 0,
+                    50, 50, 50, 50, 50, 50, 50, 50,
+                    10, 10, 20, 30, 30, 20, 10, 10,
+                    5, 5, 10, 25, 25, 10, 5, 5,
+                    0, 0, 0, 20, 20, 0, 0, 0,
+                    5, -5, -10, 0, 0, -10, -5, 5,
+                    5, 10, 10, -20, -20, 10, 10, 5,
+                    0, 0, 0, 0, 0, 0, 0, 0]
+        night_map = [-50, -40, -30, -30, -30, -30, -40, -50,
+                     -40, -20, 0, 0, 0, 0, -20, -40,
+                     -30, 0, 10, 15, 15, 10, 0, -30,
+                     -30, 5, 15, 20, 20, 15, 5, -30,
+                     -30, 0, 15, 20, 20, 15, 0, -30,
+                     -30, 5, 10, 15, 15, 10, 5, -30,
+                     -40, -20, 0, 5, 5, 0, -20, -40,
+                     -50, -40, -30, -30, -30, -30, -40, -50]
+        bishop_map = [-20, -10, -10, -10, -10, -10, -10, -20,
+                      -10, 0, 0, 0, 0, 0, 0, -10,
+                      -10, 0, 5, 10, 10, 5, 0, -10,
+                      -10, 5, 5, 10, 10, 5, 5, -10,
+                      -10, 0, 10, 10, 10, 10, 0, -10,
+                      -10, 10, 10, 10, 10, 10, 10, -10,
+                      -10, 5, 0, 0, 0, 0, 5, -10,
+                      -20, -10, -10, -10, -10, -10, -10, -20]
+        rook_map = [0, 0, 0, 0, 0, 0, 0, 0,
+                    5, 10, 10, 10, 10, 10, 10, 5,
+                    -5, 0, 0, 0, 0, 0, 0, -5,
+                    -5, 0, 0, 0, 0, 0, 0, -5,
+                    -5, 0, 0, 0, 0, 0, 0, -5,
+                    -5, 0, 0, 0, 0, 0, 0, -5,
+                    -5, 0, 0, 0, 0, 0, 0, -5,
+                    0, 0, 0, 5, 5, 0, 0, 0]
+        queen_map = [-20, -10, -10, -5, -5, -10, -10, -20,
+                     -10, 0, 0, 0, 0, 0, 0, -10,
+                     -10, 0, 5, 5, 5, 5, 0, -10,
+                     -5, 0, 5, 5, 5, 5, 0, -5,
+                     0, 0, 5, 5, 5, 5, 0, -5,
+                     -10, 5, 5, 5, 5, 5, 0, -10,
+                     -10, 0, 5, 0, 0, 0, 0, -10,
+                     -20, -10, -10, -5, -5, -10, -10, -20]
+
+        for i in range(64):
+            if self.OB.WP[i] == 1:
+                W_value += 100
+                W_material+= 1
+            if self.OB.BP[i] == 1:
+                B_value += 100
+                B_material+=1
+
+            if self.OB.WN[i] == 1:
+                W_value += 320
+                W_material += 3
+            if self.OB.BN[i] == 1:
+                B_value += 320
+                B_material += 3
+
+            if self.OB.WB[i] == 1:
+                W_value += 330
+                W_material += 3
+            if self.OB.BB[i] == 1:
+                B_value += 330
+                B_material += 3
+
+            if self.OB.WR[i] == 1:
+                W_value += 500
+                W_material += 5
+            if self.OB.BR[i] == 1:
+                B_value += 500
+                B_material += 5
+
+            if self.OB.WQ[i] == 1:
+                W_value += 900
+                W_material += 9
+            if self.OB.BQ[i] == 1:
+                B_value += 900
+                B_material += 9
+
+            king_map = [-30,-40,-40,-50,-50,-40,-40,-30,
+                        -30,-40,-40,-50,-50,-40,-40,-30,
+                        -30,-40,-40,-50,-50,-40,-40,-30,
+                        -30,-40,-40,-50,-50,-40,-40,-30,
+                        -20,-30,-30,-40,-40,-30,-30,-20,
+                        -10,-20,-20,-20,-20,-20,-20,-10,
+                         20, 20,  0,  0,  0,  0, 20, 20,
+                         20, 30, 10,  0,  0, 10, 30, 20]
+
+            if W_material <= 13 and B_material <= 13:
+                self.end_game = True
+                king_map = [-50,-40,-30,-20,-20,-30,-40,-50,
+                            -30,-20,-10,  0,  0,-10,-20,-30,
+                            -30,-10, 20, 30, 30, 20,-10,-30,
+                            -30,-10, 30, 40, 40, 30,-10,-30,
+                            -30,-10, 30, 40, 40, 30,-10,-30,
+                            -30,-10, 20, 30, 30, 20,-10,-30,
+                            -30,-30,  0,  0,  0,  0,-30,-30,
+                            -50,-30,-30,-30,-30,-30,-30,-50]
+
+            if self.OB.WK[i] == 1:
+                W_value += 20000
+            if self.OB.BK[i] == 1:
+                B_value += 20000
+
+
+            W_value += self.OB.WP[i] * pawn_map[i]
+            B_value += self.OB.BP[i] * pawn_map[63 - i]
+            W_value += self.OB.WN[i] * night_map[i]
+            B_value += self.OB.BN[i] * night_map[63 - i]
+            W_value += self.OB.WB[i] * bishop_map[i]
+            B_value += self.OB.BB[i] * bishop_map[63 - i]
+            W_value += self.OB.WR[i] * rook_map[i]
+            B_value += self.OB.BR[i] * rook_map[63 - i]
+            W_value += self.OB.WQ[i] * queen_map[i]
+            B_value += self.OB.BQ[i] * queen_map[63 - i]
+            W_value += self.OB.WK[i] * king_map[i]
+            B_value += self.OB.BK[i] * king_map[63 - i]
+
+        self.evaluation = W_value - B_value
+
     def makeGameMove(self,x,y):
         if (x, y) in self.enPassantMoves:
             self.OB.enPassantMove(x, y)
@@ -150,7 +277,8 @@ class Game:
             self.OB.moveMaker(x, y)
         self.kingsRooksMovedCheck(x)
         self.OB.updateMaps()
-        self.OB.blackPromotion()
+        self.OB.blackPromotion(self.playerStarts)
+        self.OB.whitePromotion(self.playerStarts)
         self.OB.updateMaps()
         self.OB.Lmoves_whiteDef()
         self.OB.Lmoves_blackDef()
@@ -160,7 +288,6 @@ class Game:
             self.ruch = 0
         else:
             self.ruch = 1
-
 
     def enPassantLegalMovesDef(self):
         self.enPassantMoves = []
@@ -202,7 +329,6 @@ class Game:
                     self.OB.board = start_state
                     self.OB.updateMaps()
 
-
     def repetitionDraw(self):
         self.boardStateList.append(
             [list(self.OB.board), self.OB.W_Lmoves, self.OB.B_Lmoves, self.enPassantMoves, self.OB.castleWSC,
@@ -240,7 +366,7 @@ class Game_vs_AI:
 
     def start_game_vs_AI(self):
         pyBoard = chess.Board()
-        game = Game(Board())
+        game = Game(Board(),self.playerStarts)
         self.OB.Display()
         while self.OB.matedWhite == False and self.OB.matedBlack == False and self.OB.draw == False:
             if self.playerStarts == True:
@@ -282,10 +408,12 @@ class Game_vs_AI:
                             game.makeGameMove(short[x],short[y])
                             self.OB.Display()
                     else:
+                        start_time = time.time()
                         move = self.minimaxRoot(1, game, self.ruch)
                         game.makeGameMove(move[0],move[1])
                         self.makeGameMove(move[0],move[1])
                         self.OB.Display()
+                        print("--- %s seconds ---" % (time.time() - start_time))
             else:
                 if self.ruch == 1:
                     self.enPassantLegalMovesDef()
@@ -323,8 +451,7 @@ class Game_vs_AI:
                         y = input().lower()
                         if y not in short:
                             print("Incorrect input")
-                        elif short[y] not in [item[1] for item in self.OB.B_Lmoves if item[0] == short[x]] and short[
-                            y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
+                        elif short[y] not in [item[1] for item in self.OB.B_Lmoves if item[0] == short[x]] and short[y] not in [item[1] for item in self.enPassantMoves if item[0] == short[x]]:
                             print('Illegal move')
                         else:
                             self.makeGameMove(short[x], short[y])
@@ -355,7 +482,8 @@ class Game_vs_AI:
             self.OB.moveMaker(x, y)
         self.kingsRooksMovedCheck(x)
         self.OB.updateMaps()
-        self.OB.blackPromotion()
+        self.OB.blackPromotion(self.playerStarts)
+        self.OB.whitePromotion(self.playerStarts)
         self.OB.updateMaps()
         self.OB.Lmoves_whiteDef()
         self.OB.Lmoves_blackDef()
@@ -415,7 +543,6 @@ class Game_vs_AI:
                     self.OB.board = start_state
                     self.OB.updateMaps()
 
-
     def repetitionDraw(self):
         self.boardStateList.append(
             [list(self.OB.board), self.OB.W_Lmoves, self.OB.B_Lmoves, self.enPassantMoves, self.OB.castleWSC,
@@ -443,25 +570,34 @@ class Game_vs_AI:
     def minimaxRoot(self,depth, board, is_max):
         possibleWmoves = board.OB.W_Lmoves
         possibleBmoves = board.OB.B_Lmoves
-        bestMove = -999999
         bestMoveFinal = None
         if is_max == 1:
+            bestMove = -999999
             possibleMoves = possibleWmoves
+            for move in possibleMoves:
+                board_save = copy.deepcopy(board)
+                board_save.makeGameMove(move[0], move[1])
+                value = max(bestMove, self.minimax(depth - 1, board_save, -10000000, 10000000, abs(is_max - 1)))
+                if value > bestMove:
+                    bestMove = value
+                    bestMoveFinal = move
+            return bestMoveFinal
         else:
+            bestMove = 999999
             possibleMoves = possibleBmoves
-        for move in possibleMoves:
-            board_save = copy.deepcopy(board)
-            board_save.makeGameMove(move[0], move[1])
-            value = max(bestMove, self.minimax(depth - 1, board_save, -10000000, 10000000, abs(is_max - 1)))
-            if value > bestMove:
-                bestMove = value
-                bestMoveFinal = move
-        return bestMoveFinal
+            for move in possibleMoves:
+                board_save = copy.deepcopy(board)
+                board_save.makeGameMove(move[0], move[1])
+                value = min(bestMove, self.minimax(depth - 1, board_save, -10000000, 10000000, abs(is_max - 1)))
+                if value < bestMove:
+                    bestMove = value
+                    bestMoveFinal = move
+            return bestMoveFinal
 
     def minimax(self,depth, board, alpha, beta, is_max):
         if (depth == 0):
-            board.OB.evaluate()
-            return board.OB.evaluation
+            board.evaluate()
+            return board.evaluation
         possibleWmoves = board.OB.W_Lmoves
         possibleBmoves = board.OB.B_Lmoves
         if is_max == 1:
@@ -491,7 +627,7 @@ class Game_vs_AI:
 # game1 = Game(Board())
 # game1.start_game_vs_AI()
 
-gameAI = Game_vs_AI(Board(),False)
+gameAI = Game_vs_AI(Board(),True)
 gameAI.start_game_vs_AI()
 # def minimaxRoot(depth,board,is_max):
 #     possibleWmoves = board.OB.W_Lmoves

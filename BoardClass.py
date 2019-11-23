@@ -129,7 +129,7 @@ class Board:
                  whiteRookAttMap = [],blackRookAttMap = [],PLmoves_whiteRook = [],PLmoves_blackRook = [],
                  whiteQueenAttMap = [],blackQueenAttMap = [],PLmoves_whiteQueen = [],PLmoves_blackQueen = [],
                  whiteKingAttMap = [],blackKingAttMap = [],PLmoves_whiteKing = [],PLmoves_blackKing = [],
-                 matedWhite = False,matedBlack = False,draw = False,evaluation = 0):
+                 matedWhite = False,matedBlack = False,draw = False):
 
         self.board = board
         self.WP,self.WN, self.WB, self.WR, self.WQ, self.WK, self.BP, self.BN, self.BB, self.BR, self.BQ, self.BK = WP,WN,WB,WR,WQ,WK,BP,BN,BB,BR,BQ,BK
@@ -157,7 +157,6 @@ class Board:
         self.matedWhite = matedWhite
         self.matedBlack = matedBlack
         self.draw = draw
-        self.evaluation = evaluation
         
 
         self.arrayToBitBoards()
@@ -1280,14 +1279,12 @@ class Board:
             self.board[62] = 'K'
             self.board[61] = 'R'
 
-
     def castleWLC(self):
         if self.WLC == True:
             self.board[60] = ' '
             self.board[56] = ' '
             self.board[58] = 'K'
             self.board[59] = 'R'
-
 
     def castleBSC(self):
         if self.BSC == True:
@@ -1296,7 +1293,6 @@ class Board:
             self.board[6] = 'k'
             self.board[5] = 'r'
 
-
     def castleBLC(self):
         if self.BLC == True:
             self.board[4] = ' '
@@ -1304,52 +1300,63 @@ class Board:
             self.board[2] = 'k'
             self.board[3] = 'r'
 
-
-    def whitePromotion(self):
+    def whitePromotion(self,is_player):
         board120 = array64_to_array120(self.board)
         board120P = array64_to_array120(self.WP)
-        for i in range(120):
-            if board120P[i] == 1:
-                if i in RANK_8:
-                    self.Display()
-                    choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
-                    if choice.upper() == 'Q':
+        if is_player == True:
+            for i in range(120):
+                if board120P[i] == 1:
+                    if i in RANK_8:
+                        self.Display()
+                        choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
+                        if choice.upper() == 'Q':
+                            board120[i] = 'Q'
+                            self.board = array120_to_array64(board120)
+                        elif choice.upper() == 'R':
+                            board120[i] = 'R'
+                            self.board = array120_to_array64(board120)
+                        elif choice.upper() == 'B':
+                            board120[i] = 'B'
+                            self.board = array120_to_array64(board120)
+                        elif choice.upper() == 'N':
+                            board120[i] = 'B'
+                            self.board = array120_to_array64(board120)
+                        else:
+                            print('No option',choice)
+        else:
+            for i in range(120):
+                if board120P[i] == 1:
+                    if i in RANK_8:
                         board120[i] = 'Q'
-                        self.board = array120_to_array64(board120)
-                    elif choice.upper() == 'R':
-                        board120[i] = 'R'
-                        self.board = array120_to_array64(board120)
-                    elif choice.upper() == 'B':
-                        board120[i] = 'B'
-                        self.board = array120_to_array64(board120)
-                    elif choice.upper() == 'N':
-                        board120[i] = 'B'
-                        self.board = array120_to_array64(board120)
-                    else:
-                        print('No option',choice)
 
-    def blackPromotion(self):
+    def blackPromotion(self,is_player):
         board120 = array64_to_array120(self.board)
         board120P = array64_to_array120(self.BP)
-        for i in range(120):
-            if board120P[i] == 1:
-                if i in RANK_1:
-                    self.Display()
-                    choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
-                    if choice.upper() == 'Q':
-                        board120[i] = 'q'
-                        self.board = array120_to_array64(board120)
-                    elif choice.upper() == 'R':
-                        board120[i] = 'r'
-                        self.board = array120_to_array64(board120)
-                    elif choice.upper() == 'B':
-                        board120[i] = 'b'
-                        self.board = array120_to_array64(board120)
-                    elif choice.upper() == 'N':
-                        board120[i] = 'n'
-                        self.board = array120_to_array64(board120)
-                    else:
-                        print('No option', choice)
+        if is_player == True:
+            for i in range(120):
+                if board120P[i] == 1:
+                    if i in RANK_1:
+                        self.Display()
+                        choice = input("Choose:\nQ - Queen\nR-Rook\nB-Bishop\nN-Knight")
+                        if choice.upper() == 'Q':
+                            board120[i] = 'Q'
+                            self.board = array120_to_array64(board120)
+                        elif choice.upper() == 'R':
+                            board120[i] = 'R'
+                            self.board = array120_to_array64(board120)
+                        elif choice.upper() == 'B':
+                            board120[i] = 'B'
+                            self.board = array120_to_array64(board120)
+                        elif choice.upper() == 'N':
+                            board120[i] = 'B'
+                            self.board = array120_to_array64(board120)
+                        else:
+                            print('No option', choice)
+        else:
+            for i in range(120):
+                if board120P[i] == 1:
+                    if i in RANK_1:
+                        board120[i] = 'Q'
 
     def mateDrawCheck(self):
         if len(self.W_Lmoves) == 0 and self.WK_checked == True:
@@ -1373,40 +1380,6 @@ class Board:
         elif False not in (self.BK | self.BB | self.WK == self.ALL) and np.sum(self.BB == 1) == 1:
             self.draw = True
 
-    def evaluate(self):
-        W_value = 0
-        B_value = 0
-        for i,j in zip(self.WP,self.BP):
-            if i == 1:
-                W_value+=10
-            if j == 1:
-                B_value+=10
-        for i,j in zip(self.WN,self.BN):
-            if i == 1:
-                W_value+=30
-            if j == 1:
-                B_value+=30
-        for i,j in zip(self.WB,self.BB):
-            if i == 1:
-                W_value+=35
-            if j == 1:
-                B_value+=35
-        for i,j in zip(self.WR,self.BR):
-            if i == 1:
-                W_value+=50
-            if j == 1:
-                B_value+=50
-        for i,j in zip(self.WQ,self.BQ):
-            if i == 1:
-                W_value+=90
-            if j == 1:
-                B_value+=90
-        for i,j in zip(self.WK,self.BK):
-            if i == 1:
-                W_value+=9000
-            if j == 1:
-                B_value+=9000
-        self.evaluation = W_value - B_value
 
 
 
