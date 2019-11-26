@@ -232,11 +232,11 @@ class Board:
         files = ['a','b','c','d','e','f','g','h']
         board8x8 = np.reshape(self.board,(8,8))
         for i in range(8):
-            print(str(ranks[i])+' ',end='')
+            print(str(ranks[i])+' |',end='')
             for j in range(8):
                 print(style[board8x8[i][j]]+'|',end='')
             print()
-        print('   a b c d e f g h')
+        print('  a  b  c  d  e  f  g  h')
 
     def get_board_state(self):
         stateBoard = np.array([' ' for i in range(64)])
