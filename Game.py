@@ -70,7 +70,7 @@ def array120_to_array64(board_10x12):
     board64 = np.asarray(board64)
     return board64
 
-
+nodes = 0
 class Game:
     def __init__(self,OB,playerStarts,ruch=1,moveHist = [],draw = False,enPassantMoves = [],boardStateList=[],evaluation = 0,end_game=False):
         self.OB = OB
@@ -567,6 +567,7 @@ class Game_vs_AI:
             self.WSR_moved = True
         elif a == 95:
             self.WK_moved = True
+    nodes = 0
 
     def minimaxRoot(self,depth, board, is_max):
         possibleWmoves = board.OB.W_Lmoves
@@ -582,6 +583,7 @@ class Game_vs_AI:
                 if value > bestMove:
                     bestMove = value
                     bestMoveFinal = move
+            print(nodes)
             return bestMoveFinal
         else:
             bestMove = 999999
@@ -593,9 +595,12 @@ class Game_vs_AI:
                 if value < bestMove:
                     bestMove = value
                     bestMoveFinal = move
+            print(nodes)
             return bestMoveFinal
 
     def minimax(self,depth, board, alpha, beta, is_max):
+        global nodes
+        nodes+=1
         if (depth == 0):
             board.evaluate()
             return board.evaluation
@@ -624,68 +629,11 @@ class Game_vs_AI:
                     return bestMove
             return bestMove
 
-#
-# game1 = Game(Board())
-# game1.start_game_vs_AI()
 
-gameAI = Game_vs_AI(Board(),True,2)
+
+gameAI = Game_vs_AI(Board(),True,1)
 gameAI.start_game_vs_AI()
-# def minimaxRoot(depth,board,is_max):
-#     possibleWmoves = board.OB.W_Lmoves
-#     possibleBmoves = board.OB.B_Lmoves
-#     bestMove = -999999
-#     bestMoveFinal = None
-#     nodes = 0
-#     if is_max == 1:
-#         possibleMoves = possibleWmoves
-#     else:
-#         possibleMoves = possibleBmoves
-#     for move in possibleMoves:
-#         board_save = copy.deepcopy(board)
-#         board_save.makeGameMove(move[0],move[1])
-#         value = max(bestMove,minimax(depth-1,board_save,-10000000,10000000,abs(is_max-1)))
-#         if value > bestMove:
-#             bestMove = value
-#             bestMoveFinal = move
-#     return bestMoveFinal
-#
-# def minimax(depth,board,alpha,beta,is_max):
-#     global nodes
-#     nodes+=1
-#     if (depth == 0):
-#         board.OB.evaluate()
-#         return board.OB.evaluation
-#     possibleWmoves = board.OB.W_Lmoves
-#     possibleBmoves = board.OB.B_Lmoves
-#     if is_max == 1:
-#         bestMove = -999999
-#         for move in possibleWmoves:
-#             board_save = copy.deepcopy(board)
-#             board_save.makeGameMove(move[0],move[1])
-#             bestMove = max(bestMove,minimax(depth-1,board_save,alpha,beta,abs(is_max-1)))
-#             del board_save
-#             alpha = max(alpha,bestMove)
-#             if beta <= alpha:
-#                 return bestMove
-#         return bestMove
-#     else:
-#         bestMove = 999999
-#         for move in possibleBmoves:
-#             board_save = copy.deepcopy(board)
-#             board_save.makeGameMove(move[0],move[1])
-#             bestMove = min(bestMove,minimax(depth-1,board_save,alpha,beta,abs(is_max-1)))
-#             del board_save
-#             beta = min(beta,bestMove)
-#             if beta <= alpha:
-#                 return bestMove
-#         return bestMove
-#
-#
-#
-# start_time = time.time()
-# game = Game(Board())
-# print(minimaxRoot(1,game,game.ruch))
-# print("--- %s seconds ---" % (time.time() - start_time))
+
 
 
 
